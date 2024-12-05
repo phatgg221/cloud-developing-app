@@ -1,10 +1,11 @@
 import React from "react";
-
+import { Button } from "./ui/button";
+import { IoHomeOutline } from "react-icons/io5";
 const Header = () => {
     return (
-        <header className="bg-white fixed h-[70px] top-0 w-full shadow-md z-50">
+        <header className="bg-black fixed h-[70px] top-0 w-full shadow-md z-50">
             <nav className="flex items-center justify-center px-20 py-4">
-                <div className="text-black">
+                <div className="text-white">
                     <ul className="flex space-x-24 text-2xl">
                         <li>
                             <a
@@ -21,6 +22,11 @@ const Header = () => {
                             >
                                 Home
                             </a>
+                        </li>
+                        <li>
+                            <Button className="transition-all font-medium">
+                                <IoHomeOutline></IoHomeOutline>
+                            </Button>
                         </li>
                         <li>
                             <a
