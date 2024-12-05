@@ -1,6 +1,8 @@
 import React from "react";
 import { Button } from "../ui/button";
 import { IoHomeOutline } from "react-icons/io5";
+import Image from "next/image";
+
 const Header = () => {
     return (
         <header className="bg-black fixed h-[70px] top-0 w-full shadow-md z-50">
@@ -24,9 +26,9 @@ const Header = () => {
                             </a>
                         </li>
                         <li>
-                            <Button className="transition-all font-medium">
-                                <IoHomeOutline></IoHomeOutline>
-                            </Button>
+                                 <a href="/" className="flex items-center">
+                                         <Image src="/logo.jpeg" alt="Phoever Logo" width={50} height={50} />
+                                 </a>
                         </li>
                         <li>
                             <a

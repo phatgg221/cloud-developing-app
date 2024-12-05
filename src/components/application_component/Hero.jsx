@@ -5,10 +5,10 @@ const Hero = () =>{
         <div className="pb-11">
             <div className="relative min-w-full lg:aspect-[197/34]">
         <Image
-          src={"/cafe-hero.jpg"}
+          src={"/fruit_desktop.png"}
           alt={"Fruit"}
           fill={true}
-          className="relative"
+          className="relative blur-sm"
         />
 
         <div className="absolute pt-[120px] pl-[650px] text-left text-white ">
