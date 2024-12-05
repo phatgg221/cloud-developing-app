@@ -2,7 +2,7 @@ import localFont from "next/font/local";
 import "./globals.css";
 import Header from "@/components/application_component/Header";
 import { Inria_Serif } from "next/font/google";
-
+import Footer from "@/components/application_component/Footer";
 const inter = Inria_Serif({ weight:'300' ,subsets: ["latin"] });
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -28,7 +28,7 @@ export default function RootLayout({ children }) {
         <Header></Header>
           {children}
 
-        {/* <Footer></Footer> */}
+        <Footer ></Footer>
       </body>
     </html>
   );
