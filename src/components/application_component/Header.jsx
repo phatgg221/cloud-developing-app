@@ -1,5 +1,5 @@
 import React from "react";
-import { Button } from "./ui/button";
+import { Button } from "../ui/button";
 import { IoHomeOutline } from "react-icons/io5";
 const Header = () => {
     return (

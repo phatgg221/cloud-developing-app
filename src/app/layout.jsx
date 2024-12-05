@@ -1,6 +1,6 @@
 import localFont from "next/font/local";
 import "./globals.css";
-import Header from "@/components/Header";
+import Header from "@/components/application_component/Header";
 import { Inria_Serif } from "next/font/google";
 
 const inter = Inria_Serif({ weight:'300' ,subsets: ["latin"] });
