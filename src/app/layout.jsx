@@ -1,6 +1,9 @@
 import localFont from "next/font/local";
 import "./globals.css";
 import Header from "@/components/Header";
+import { Inria_Serif } from "next/font/google";
+
+const inter = Inria_Serif({ weight:'300' ,subsets: ["latin"] });
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
   variable: "--font-geist-sans",
@@ -20,10 +23,12 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        {children}
+      
+      <body className={`${inter.className} bg-slate-100 text-black`}>
+        <Header></Header>
+          {children}
+
+        {/* <Footer></Footer> */}
       </body>
     </html>
   );
