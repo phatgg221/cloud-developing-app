@@ -6,7 +6,7 @@ import Link from "next/link";
 const Header = () => {
     return (
         <header className="bg-black fixed h-[70px] top-0 w-full shadow-md z-50">
-            <nav className="flex items-center justify-center px-20 py-4">
+            <nav className="flex items-center justify-center space-x-20 px-20 py-4">
                 <div className="text-white">
                     <ul className="flex space-x-24 text-2xl">
                         <li>
@@ -46,8 +46,14 @@ const Header = () => {
                                 Contact Us
                             </Link>
                         </li>
+                      
                     </ul>
                 </div>
+               <div className>
+               <Button className='bg-[#d4af37] text-black hover:bg-[#b59e2d] transition-all px-4 py-2 rounded-lg font-medium shadow-md' href="/login">
+                <Link href="/login">Login</Link>
+                </Button>
+               </div>
             </nav>
         </header>
     );
