@@ -12,7 +12,7 @@ const Header = () => {
                         <li>
                             <a
                                 href="/"
-                                className="transition-all hover:text-blue-500 font-medium hover:underline"
+                                className="transition-all hover:text-[#d4af37] font-medium hover:underline"
                             >
                                 Night
                             </a>
@@ -20,7 +20,7 @@ const Header = () => {
                         <li>
                             <a
                                 href="/"
-                                className="transition-all hover:text-blue-500 font-medium hover:underline"
+                                className="transition-all hover:text-[#d4af37] font-medium hover:underline"
                             >
                                 Home
                             </a>
@@ -33,7 +33,7 @@ const Header = () => {
                         <li>
                             <a
                                 href="/about"
-                                className="transition-all hover:text-blue-500 font-medium hover:underline"
+                                className="transition-all hover:text-[#d4af37] font-medium hover:underline"
                             >
                                 Day
                             </a>
@@ -41,7 +41,7 @@ const Header = () => {
                         <li>
                             <a
                                 href="/contact-us"
-                                className="transition-all hover:text-blue-500 font-medium hover:underline"
+                                className="transition-all hover:text-[#d4af37] font-medium hover:underline"
                             >
                                 Contact Us
                             </a>
