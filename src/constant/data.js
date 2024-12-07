@@ -35,21 +35,20 @@ export const sections = [
   export const nightSection =[
     {
       id: 1,
-      title:"STARTER",
+      title:"Main drinks",
       dishes:[
-        { name: 'Cesar Salad', description: 'Lectus sit a quam viverra...', price: '$5' },
-  { name: 'Cesar Salad', description: 'Morbi aenean congue leo sit...', price: '$10' },
-  { name: 'Cesar Salad', description: 'Massa tempor imperdiet...', price: '$11' },
-  { name: 'Cesar Salad', description: 'Sagittis sed aliquam laoreet...', price: '$22' },
-  { name: 'Cesar Salad', description: 'Morbi aenean congue leo sit...', price: '$12' },
-  { name: 'Cesar Salad', description: 'Lectus sit a quam viverra...', price: '$12' },
+        { name: 'White coffee', description: 'Fresh coffee with condensed milk', price: '$5' },
+  { name: 'Black coffee', description: 'Need a wake-up call?', price: '$10' },
+  { name: 'Latte', description: 'Soft coffee', price: '$11' },
+  { name: 'Capuchino', description: 'Sagittis sed aliquam laoreet...', price: '$22' },
+  { name: 'Coffee', description: 'Just coffee?', price: '$12' },
       ]
     },
     {
       id: 2,
-      title:"STEAK",
+      title:"Desserts",
       dishes:[
-        { name: 'Cesar Salad', description: 'Lectus sit a quam viverra...', price: '$5' },
+        { name: 'Croisants', description: 'Lectus sit a quam viverra...', price: '$5' },
   { name: 'Cesar Salad', description: 'Morbi aenean congue leo sit...', price: '$10' },
   { name: 'Cesar Salad', description: 'Massa tempor imperdiet...', price: '$11' },
   { name: 'Cesar Salad', description: 'Sagittis sed aliquam laoreet...', price: '$22' },
@@ -60,18 +59,6 @@ export const sections = [
     {
       id: 3,
       title:"OTHERS",
-      dishes:[
-        { name: 'Cesar Salad', description: 'Lectus sit a quam viverra...', price: '$5' },
-  { name: 'Cesar Salad', description: 'Morbi aenean congue leo sit...', price: '$10' },
-  { name: 'Cesar Salad', description: 'Massa tempor imperdiet...', price: '$11' },
-  { name: 'Cesar Salad', description: 'Sagittis sed aliquam laoreet...', price: '$22' },
-  { name: 'Cesar Salad', description: 'Morbi aenean congue leo sit...', price: '$12' },
-  { name: 'Cesar Salad', description: 'Lectus sit a quam viverra...', price: '$12' },
-      ]
-    },
-    {
-      id: 4,
-      title:"DRINKS",
       dishes:[
         { name: 'Cesar Salad', description: 'Lectus sit a quam viverra...', price: '$5' },
   { name: 'Cesar Salad', description: 'Morbi aenean congue leo sit...', price: '$10' },

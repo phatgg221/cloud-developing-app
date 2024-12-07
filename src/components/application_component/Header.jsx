@@ -2,7 +2,7 @@ import React from "react";
 import { Button } from "../ui/button";
 import { IoHomeOutline } from "react-icons/io5";
 import Image from "next/image";
-
+import Link from "next/link";
 const Header = () => {
     return (
         <header className="bg-black fixed h-[70px] top-0 w-full shadow-md z-50">
@@ -10,41 +10,41 @@ const Header = () => {
                 <div className="text-white">
                     <ul className="flex space-x-24 text-2xl">
                         <li>
-                            <a
+                            <Link
                                 href="/"
                                 className="transition-all hover:text-[#d4af37] font-medium hover:underline"
                             >
                                 Home
-                            </a>
+                            </Link>
                         </li>
                         <li>
-                            <a
+                            <Link
                                 href="/menu"
                                 className="transition-all hover:text-[#d4af37] font-medium hover:underline"
                             >
                                 Menu
-                            </a>
+                            </Link>
                         </li>
                         <li>
-                                 <a href="/" className="flex items-center">
+                                 <Link href="/" className="flex items-center">
                                          <Image src="/logo.jpeg" alt="Phoever Logo" width={50} height={50} />
-                                 </a>
+                                 </Link>
                         </li>
                         <li>
-                            <a
+                            <Link
                                 href="/about"
                                 className="transition-all hover:text-[#d4af37] font-medium hover:underline"
                             >
                                 Day
-                            </a>
+                            </Link>
                         </li>
                         <li>
-                            <a
+                            <Link
                                 href="/contact-us"
                                 className="transition-all hover:text-[#d4af37] font-medium hover:underline"
                             >
                                 Contact Us
-                            </a>
+                            </Link>
                         </li>
                     </ul>
                 </div>
