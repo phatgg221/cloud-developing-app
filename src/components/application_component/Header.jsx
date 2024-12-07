@@ -40,7 +40,7 @@ const Header = () => {
                         </li>
                         <li>
                             <a
-                                href="/contact"
+                                href="/contact-us"
                                 className="transition-all hover:text-blue-500 font-medium hover:underline"
                             >
                                 Contact Us
