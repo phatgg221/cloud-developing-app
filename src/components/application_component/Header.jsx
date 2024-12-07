@@ -14,15 +14,15 @@ const Header = () => {
                                 href="/"
                                 className="transition-all hover:text-[#d4af37] font-medium hover:underline"
                             >
-                                Night
+                                Home
                             </a>
                         </li>
                         <li>
                             <a
-                                href="/"
+                                href="/menu"
                                 className="transition-all hover:text-[#d4af37] font-medium hover:underline"
                             >
-                                Home
+                                Menu
                             </a>
                         </li>
                         <li>
