@@ -8,7 +8,7 @@ const StarterSection = ({ title, dishes }) => {
   return (
     <div>
       <div
-        className="pt-[50px] relative w-full h-[460px] bg-cover bg-center"
+        className="pt-[50px] relative w-full h-[200px] bg-cover bg-center"
         style={{ backgroundImage: `url('/images.png')` }}
       >
         <div className="absolute bottom-5 left-5">
