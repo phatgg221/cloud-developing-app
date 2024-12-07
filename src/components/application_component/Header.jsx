@@ -1,8 +1,16 @@
 import React from "react";
 import { Button } from "../ui/button";
-import { IoHomeOutline } from "react-icons/io5";
 import Image from "next/image";
 import Link from "next/link";
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
+  } from "@/components/ui/dialog"
+  
 const Header = () => {
     return (
         <header className="bg-black fixed h-[70px] top-0 w-full shadow-md z-50">
@@ -49,11 +57,58 @@ const Header = () => {
                       
                     </ul>
                 </div>
-               <div className>
-               <Button className='bg-[#d4af37] text-black hover:bg-[#b59e2d] transition-all px-4 py-2 rounded-lg font-medium shadow-md' href="/login">
-                <Link href="/login">Login</Link>
+                <Dialog>
+          <DialogTrigger asChild>
+            <Button className="bg-[#d4af37] text-black hover:bg-[#b59e2d] transition-all px-6 py-2 rounded-lg font-medium">
+              Login
+            </Button>
+          </DialogTrigger>
+
+          {/* Dialog Content */}
+          <DialogContent className="bg-white p-6 rounded-lg shadow-lg max-w-md mx-auto">
+            <DialogHeader>
+              <DialogTitle>Login</DialogTitle>
+              <DialogDescription>
+                Please enter your credentials to login.
+              </DialogDescription>
+            </DialogHeader>
+
+            {/* Add your login form or content here */}
+            <form className="space-y-4">
+              <div>
+                <label htmlFor="email" className="block font-medium">
+                  Email
+                </label>
+                <input
+                  type="email"
+                  id="email"
+                  className="w-full p-2 border rounded-md"
+                  placeholder="Enter your email"
+                />
+              </div>
+              <div>
+                <label htmlFor="password" className="block font-medium">
+                  Password
+                </label>
+                <input
+                  type="password"
+                  id="password"
+                  className="w-full p-2 border rounded-md"
+                  placeholder="Enter your password"
+                />
+              </div>
+              <div className="flex justify-end">
+                <Button className="bg-[#d4af37] text-black hover:bg-[#b59e2d] transition-all px-4 py-2 rounded-md">
+                  Login
                 </Button>
-               </div>
+              </div>
+            </form>
+          </DialogContent>
+        </Dialog>
+               {/* <Button className='bg-[#d4af37] text-black hover:bg-[#b59e2d] transition-all px-4 py-2 rounded-lg font-medium shadow-md' href="/login">
+                <Link href="/login">Login</Link>
+                </Button> */}
+
             </nav>
         </header>
     );
