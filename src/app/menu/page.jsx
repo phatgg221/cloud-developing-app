@@ -15,10 +15,10 @@ const NightServe = () => {
                     className="mx-auto"
                 />
                 <p className="text-4xl pt-[30px] font-bold">
-                    Night Hours
+                    Why not have a drink with us?
                 </p>
                 <p className="mx-auto max-w-lg pt-[20px]">
-                    Lectus sit a quam viverra ridiculus scelerisque dapibus sed. Id nisl parturient adipiscing sit lectus tempor. Sagittis sed aliquam laoreet dignissim. Massa bibendum ligula morbi arcu purus lectus fermentum sed.
+                    Here is our dedication to serve you the best drinks in town.
                 </p>
             </div>
             {nightSection.map((item) => (
