@@ -2,11 +2,11 @@
 
 import React from "react";
 import { usePathname } from "next/navigation";
-import Header from "@/components/headers/header";
-
+import Header from "./application_component/Header";
+import Footer from "./application_component/Footer";
 const ConditionalHeader = ({ children }) => {
   const pathname = usePathname();
-  const noHeaderPages = ["/function","/morningServe","/aboutUs","/nightServe","/","/contact"];
+  const noHeaderPages = ["/admin"];
 
   const paddingTopClass = pathname && noHeaderPages.includes(pathname) ? "" : "pt-[70px]";
 
@@ -16,6 +16,7 @@ const ConditionalHeader = ({ children }) => {
       <div className={paddingTopClass}>
         {children}
       </div>
+      {pathname && !noHeaderPages.includes(pathname) && <Footer />}
     </>
   );
 };
