@@ -6,7 +6,7 @@ import Header from "./application_component/Header";
 import Footer from "./application_component/Footer";
 const ConditionalHeader = ({ children }) => {
   const pathname = usePathname();
-  const noHeaderPages = ["/admin", "/admin/manage-users"];
+  const noHeaderPages = ["/admin", "/admin/manage-users","/admin/manage-menu","admin/manage-table"];
 
   const paddingTopClass = pathname && noHeaderPages.includes(pathname) ? "" : "pt-[70px]";
 
