@@ -43,10 +43,10 @@ const Header = () => {
                         </li>
                         <li>
                             <Link
-                                href="/about"
+                                href="/table"
                                 className="transition-all hover:text-[#d4af37] font-medium hover:underline"
                             >
-                                Day
+                                Table
                             </Link>
                         </li>
                         <li>
@@ -79,7 +79,7 @@ const Header = () => {
                             </DialogDescription>
                         </DialogHeader>
 
-                        {/* Tabs */}
+
                         <div className="flex space-x-4 mb-4">
                             <button
                                 className={`px-4 py-2 font-medium transition-all rounded-md ${
