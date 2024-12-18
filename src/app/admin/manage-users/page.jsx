@@ -2,7 +2,7 @@
 import { useState } from "react";
 import React from "react";
 import SearchBar from "@/components/searchBar";
-import Link from "next/link";
+// import Link from "next/link";
 import Image from "next/image";
 
 const CardTable = () => {
