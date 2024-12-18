@@ -54,7 +54,7 @@ const CardTable = () => {
   return (
     <>
     <h1 className="font-bold text-5xl text-[#f8a61b]">
-        Manage users
+        Manage tables
     </h1>
       <SearchBar
         placeholder="Search for competition name"
