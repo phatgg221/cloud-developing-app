@@ -25,7 +25,7 @@ export default function RootLayout({ children }) {
   const pathname = usePathname();
 
   // Pages where the Chatbox should NOT appear
-  const excludedPages = ["/admin", "/user-profile", "/register", "/login"];
+  const excludedPages = [ "/user-profile", "/register", "/login"];
 
   return (
     <html lang="en">
