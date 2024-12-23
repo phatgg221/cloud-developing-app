@@ -1,0 +1,46 @@
+/* SearchBar.module.css */
+.searchBar {
+  width: 100%;
+  height: 2.5rem;
+  display: flex;
+  justify-content: center;
+  margin: 20px 0;
+}
+
+.searchInput {
+  width: 100%;
+  padding: 10px;
+  border: 1px #dddfe2 solid;
+  border-right: none; /* To make it seamless with the button */
+  border-radius: 3px 0 0 3px;
+  font-family: 'Montserrat';
+}
+
+.searchInput::placeholder {
+  text-align: center;
+}
+
+/* clears the 'X' from Internet Explorer */
+.searchInput::-ms-clear {
+  display: none;
+}
+
+.searchInput::-ms-reveal {
+  display: none;
+}
+
+/* clears the 'X' from Chrome */
+.searchInput::-webkit-search-decoration,
+.searchInput::-webkit-search-cancel-button,
+.searchInput::-webkit-search-results-button,
+.searchInput::-webkit-search-results-decoration {
+  display: none;
+}
+
+.submitBtn {
+  aspect-ratio: 1 / 1;
+  border: none;
+  border-radius: 0 3px 3px 0;
+  background-color: #f8a61b;
+  width: 40px;
+}
