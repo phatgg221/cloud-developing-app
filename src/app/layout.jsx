@@ -31,9 +31,7 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <body className={`${inter.className} bg-slate-100 text-black`}>
 
-          {children}
 
-        <Footer ></Footer>
         {!excludedPages.includes(pathname) && <Chatbox />}
         <ConditionalHeader>{children}</ConditionalHeader>
 
