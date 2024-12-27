@@ -1,29 +1,59 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 export default function TablePage() {
-  // Mock data for available tables
-  const [tables, setTables] = useState([
-    { id: 1, number: 'A1', status: 'Available', size: 4 },
-    { id: 2, number: 'B1', status: 'Occupied', size: 6 },
-    { id: 3, number: 'C1', status: 'Available', size: 2 },
-    { id: 4, number: 'D1', status: 'Occupied', size: 8 },
-  ]);
+  const apiBaseUrl = 'https://<api-gateway-url>'; // Replace with your API Gateway URL
 
-  // Toggle table availability (for simulation)
-  const toggleAvailability = (id) => {
-    setTables((prev) =>
-      prev.map((table) =>
-        table.id === id
-          ? {
-              ...table,
-              status: table.status === 'Available' ? 'Occupied' : 'Available',
-            }
-          : table
-      )
-    );
+  const [tables, setTables] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+
+  // Fetch tables from the backend
+  useEffect(() => {
+    const fetchTables = async () => {
+      try {
+        setLoading(true);
+        const response = await fetch(`${apiBaseUrl}/tables`);
+        if (!response.ok) throw new Error('Failed to fetch tables');
+        const data = await response.json();
+        setTables(data);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchTables();
+  }, []);
+
+  // Toggle table availability
+  const toggleAvailability = async (id) => {
+    const table = tables.find((t) => t.id === id);
+    const updatedStatus = table.status === 'Available' ? 'Occupied' : 'Available';
+
+    try {
+      const response = await fetch(`${apiBaseUrl}/tables/${id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status: updatedStatus }),
+      });
+      if (!response.ok) throw new Error('Failed to update table status');
+
+      // Update the frontend table list
+      setTables((prev) =>
+        prev.map((t) =>
+          t.id === id ? { ...t, status: updatedStatus } : t
+        )
+      );
+    } catch (err) {
+      setError(err.message);
+    }
   };
+
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error}</div>;
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-r from-green-50 via-white to-green-50">

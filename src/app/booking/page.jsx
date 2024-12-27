@@ -3,7 +3,8 @@
 import { useState } from 'react';
 
 export default function BookingTable() {
-  // State for booking form
+  const apiBaseUrl = 'https://<api-gateway-url>'; // Replace with your API Gateway URL
+
   const [formData, setFormData] = useState({
     date: '',
     time: '',
@@ -11,8 +12,8 @@ export default function BookingTable() {
   });
 
   const [confirmation, setConfirmation] = useState(null);
+  const [error, setError] = useState('');
 
-  // Handle form input changes
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
@@ -21,15 +22,24 @@ export default function BookingTable() {
     }));
   };
 
-  // Handle form submission
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Mock confirmation
-    setConfirmation(`Table booked for ${formData.people} people on ${formData.date} at ${formData.time}.`);
-    
-    // Clear form after submission
-    setFormData({ date: '', time: '', people: '' });
+    try {
+      const response = await fetch(`${apiBaseUrl}/bookings`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
+      });
+
+      if (!response.ok) throw new Error('Failed to create booking');
+      const data = await response.json();
+
+      setConfirmation(`Booking successful! Booking ID: ${data.bookingId}`);
+      setFormData({ date: '', time: '', people: '' });
+    } catch (err) {
+      setError(err.message);
+    }
   };
 
   return (
@@ -38,7 +48,7 @@ export default function BookingTable() {
         <h1 className="text-3xl font-bold text-gray-700 mb-6 text-center">
           Book a Table
         </h1>
-        
+
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label className="block text-sm font-medium text-gray-600">Date</label>
@@ -51,7 +61,7 @@ export default function BookingTable() {
               className="mt-1 block w-full rounded-md border border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
             />
           </div>
-          
+
           <div>
             <label className="block text-sm font-medium text-gray-600">Time</label>
             <input
@@ -63,7 +73,7 @@ export default function BookingTable() {
               className="mt-1 block w-full rounded-md border border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
             />
           </div>
-          
+
           <div>
             <label className="block text-sm font-medium text-gray-600">Number of People</label>
             <input
@@ -76,7 +86,7 @@ export default function BookingTable() {
               className="mt-1 block w-full rounded-md border border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
             />
           </div>
-          
+
           <button
             type="submit"
             className="w-full py-2 px-4 bg-indigo-500 text-white rounded-md shadow hover:bg-indigo-600 transition"
@@ -84,10 +94,15 @@ export default function BookingTable() {
             Book Now
           </button>
         </form>
-        
+
         {confirmation && (
           <div className="mt-6 bg-green-50 border border-green-400 text-green-700 px-4 py-3 rounded relative">
             <p>{confirmation}</p>
+          </div>
+        )}
+        {error && (
+          <div className="mt-6 bg-red-50 border border-red-400 text-red-700 px-4 py-3 rounded relative">
+            <p>{error}</p>
           </div>
         )}
       </div>
