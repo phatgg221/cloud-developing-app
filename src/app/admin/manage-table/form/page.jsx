@@ -141,7 +141,7 @@ const NewTableForm = () => {
           <button
             className={`${styleBtn.btn}`}
             type="button"
-            onClick={() => router.push("/admin/manage-tables")}
+            onClick={() => router.push("/admin/manage-table")}
           >
             Return
           </button>
