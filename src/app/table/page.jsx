@@ -3,13 +3,13 @@
 import { useState, useEffect } from 'react';
 
 export default function TablePage() {
-  const apiBaseUrl = 'https://<api-gateway-url>'; // Replace with your API Gateway URL
+  const apiBaseUrl = 'https://<api-gateway-url>'; 
 
   const [tables, setTables] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
-  // Fetch tables from the backend
+
   useEffect(() => {
     const fetchTables = async () => {
       try {
@@ -53,7 +53,6 @@ export default function TablePage() {
   };
 
   if (loading) return <div>Loading...</div>;
-  if (error) return <div>Error: {error}</div>;
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-r from-green-50 via-white to-green-50">

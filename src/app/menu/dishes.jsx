@@ -1,9 +1,12 @@
 import React from 'react';
 import DishItem from './dishesItem';
 
+const Dishes = ({ dishes }) => {
+  if (!dishes || dishes.length === 0) {
+    
+    return <div className="pt-[100px] pb-[100px] text-center">No dishes available</div>;
+  }
 
-
-const Dishes= ({ dishes }) => {
   const firstColumn = dishes.slice(0, 3);
   const secondColumn = dishes.slice(3, 6);
 
