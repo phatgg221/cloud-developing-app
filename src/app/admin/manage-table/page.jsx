@@ -19,7 +19,7 @@ const CardTable = () => {
 
 
     const handleUpdate = (menu) => {
-        router.push(`/admin/manage-table/form?id=${menu.id}`);
+        router.push(`/admin/manage-table/form?id=${menu}`);
       };
   useEffect(() => {
     const fetchTableData = async () => {

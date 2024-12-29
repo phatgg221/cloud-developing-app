@@ -23,7 +23,7 @@ const NewTableForm = () => {
       const fetchTableData = async () => {
         try {
           const response = await fetch(
-            `https://ic1ln5cze5.execute-api.us-east-1.amazonaws.com/TableStage/getTables`
+            `https://ic1ln5cze5.execute-api.us-east-1.amazonaws.com/cafeappstage/getTable`
           );
           if (response.ok) {
             const data = await response.json();
@@ -61,9 +61,9 @@ const NewTableForm = () => {
 
     try {
       const response = await fetch(
-        `https://ic1ln5cze5.execute-api.us-east-1.amazonaws.com/TableStage/createTable`,
+        `https://ic1ln5cze5.execute-api.us-east-1.amazonaws.com/cafeappstage/createTable`,
         {
-          method: "POST",
+          method:  isEditMode ? "PUT" : "POST",
           headers: {
             "Content-Type": "application/json",
           },
@@ -75,7 +75,7 @@ const NewTableForm = () => {
         throw new Error("Failed to submit form data.");
       }
 
-      router.push("/admin/manage-tables");
+      router.push("/admin/manage-table");
     } catch (error) {
       console.error("Error submitting table data:", error);
     }
