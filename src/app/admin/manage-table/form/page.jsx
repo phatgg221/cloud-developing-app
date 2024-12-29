@@ -1,13 +1,18 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState,Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import style from "../../../../styles/Admin.Form.module.css";
 import styleBtn from "../../../../styles/table.module.css";
 
 const NewTableForm = () => {
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const id = searchParams.get("id"); // Read the `id` from the query parameter
+  const [id,setId]=useState('');
+    function Search() {
+      const searchParams = useSearchParams();
+      const id = searchParams.get("id")
+      setId(id);
+      return <div></div>;
+    }
 
   const [isEditMode, setIsEditMode] = useState(false);
   const [formData, setFormData] = useState({
@@ -83,6 +88,9 @@ const NewTableForm = () => {
 
   return (
     <div className={`${style.formContainer}`}>
+        <Suspense fallback={<div>Loading...</div>}>
+              <Search />
+            </Suspense>
       <form className={`${style.form}`} onSubmit={handleSubmit}>
         <div className={style.inputGroup}>
           <label>Table ID</label>

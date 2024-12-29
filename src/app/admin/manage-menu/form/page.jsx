@@ -6,9 +6,14 @@ import styleBtn from "../../../../styles/table.module.css";
 
 const NewMenuForm = () => {
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const id = searchParams.get("id"); // Read the `id` from the query parameter
-
+  ; // Read the `id` from the query parameter
+  const [id,setId]=useState('');
+  function Search() {
+    const searchParams = useSearchParams();
+    const id = searchParams.get("id")
+    setId(id);
+    return <div></div>;
+  }
   const [dishes, setDishes] = useState([{ name: "", description: "", price: "", image: "" }]);
   const [isEditMode, setIsEditMode] = useState(false);
   const [formData, setFormData] = useState({
@@ -96,7 +101,7 @@ const NewMenuForm = () => {
     
     <div className={`${style.formContainer}`}>
       <Suspense fallback={<div>Loading...</div>}>
-      <NewMenuForm />
+      <Search />
     </Suspense>
       <form className={`${style.form}`} onSubmit={handleSubmit}>
         <div className={style.inputGroup}>
