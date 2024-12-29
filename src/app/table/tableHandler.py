@@ -3,11 +3,10 @@ import json
 import os
 from decimal import Decimal
 
-# Initialize DynamoDB resource
 dynamodb = boto3.resource('dynamodb')
-TABLES_TABLE = os.environ.get('TABLES_TABLE')  # Name of the DynamoDB table
+TABLES_TABLE = os.environ.get('TABLES_TABLE') 
 
-# Helper function to convert Decimal to float/int
+
 def decimal_to_native(obj):
     if isinstance(obj, list):
         return [decimal_to_native(item) for item in obj]
@@ -24,11 +23,11 @@ def get_tables():
     table = dynamodb.Table(TABLES_TABLE)
 
     try:
-        # Scan all items from the DynamoDB table
+ 
         response = table.scan()
         items = response.get("Items", [])
 
-        # Convert all Decimal types to native Python types
+  
         native_items = decimal_to_native(items)
 
         return {

@@ -39,9 +39,19 @@ const MenuTable = () => {
   }, []);
 
   const handleDelete = async (menu) => {
+    const requestBody = {
+        httpMethod: "DELETE",
+        body: JSON.stringify({
+          id: menu.id,
+        }),
+      };
     try {
-      const response = await fetch(`/api/menu_api?id=${menu.id}`, {
+      const response = await fetch(`https://ic1ln5cze5.execute-api.us-east-1.amazonaws.com/MenuStage/deleteMenu`, {
         method: "DELETE",
+        headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(requestBody),
       });
 
       if (response.ok) {
