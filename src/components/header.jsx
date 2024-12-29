@@ -7,10 +7,15 @@ const Header = () => {
             <nav className="flex pt-[20px] items-center">
                 <div className="text-black ">
                     <ul className="flex  text-3xl space-x-[240px] justify-between">
+                        {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
                     <li><a href="/function">Function</a></li>
+                    {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
                     <li><a href="/">Night</a></li>
+                    {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
                     <li><a href="/">Home</a></li>
+                    {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
                     <li><a href="/about">Day</a></li>
+                    {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
                     <li><a href="/contact">Contact Us</a></li>
                     </ul>
                 </div>

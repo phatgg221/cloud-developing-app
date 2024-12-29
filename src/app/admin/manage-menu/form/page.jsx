@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState,Suspense  } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import style from "../../../../styles/Admin.Form.module.css";
 import styleBtn from "../../../../styles/table.module.css";
@@ -93,7 +93,11 @@ const NewMenuForm = () => {
   };
 
   return (
+    
     <div className={`${style.formContainer}`}>
+      <Suspense fallback={<div>Loading...</div>}>
+      <NewMenuForm />
+    </Suspense>
       <form className={`${style.form}`} onSubmit={handleSubmit}>
         <div className={style.inputGroup}>
           <label>Menu ID</label>

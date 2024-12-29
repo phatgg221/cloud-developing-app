@@ -1,0 +1,3 @@
+# .eslintignore
+src/app/menu/dishesItem.jsx
+src/components/header.jsx
