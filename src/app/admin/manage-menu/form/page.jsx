@@ -1,13 +1,14 @@
-"use client"
+"use client";
 import React, { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-import style from "../../../styles/Admin.Form.module.css";
-import styleBtn from "../../../styles/table.module.css";
-
+import { useRouter, useSearchParams } from "next/navigation";
+import style from "../../../../styles/Admin.Form.module.css";
+import styleBtn from "../../../../styles/table.module.css";
 
 const NewMenuForm = () => {
   const router = useRouter();
-  const [dishCount, setDishCount] = useState(1);
+  const searchParams = useSearchParams();
+  const id = searchParams.get("id"); // Read the `id` from the query parameter
+
   const [dishes, setDishes] = useState([{ name: "", description: "", price: "", image: "" }]);
   const [isEditMode, setIsEditMode] = useState(false);
   const [formData, setFormData] = useState({
@@ -16,33 +17,33 @@ const NewMenuForm = () => {
     dishes: [],
   });
 
-  const [errorSubmit, setErrorSubmit] = useState("");
-
   useEffect(() => {
-    setFormData((prevState) => ({ ...prevState, dishes: dishes }));
-  }, [dishes]);
-
-  useEffect(() => {
-    const fetchData = async () => {
-
+    if (id) {
+      // Fetch menu data if `id` is present (update mode)
+      const fetchMenuData = async () => {
         try {
-          setIsEditMode(true);
           const response = await fetch(`https://ic1ln5cze5.execute-api.us-east-1.amazonaws.com/MenuStage/getMenu`);
-          const data = await response.json();
-          if (data && data.error === false && data.statusCode === 200 && data.data) {
-            setFormData(data.data);
-            setDishCount(data.data.dishes.length);
-            setDishes(data.data.dishes);
+          if (response.ok) {
+            const data = await response.json();
+            const body = JSON.parse(data.body);
+            const menu = body.data.find((menu) => menu.id === id); 
+
+            if (menu) {
+              setFormData(menu);
+              setDishes(menu.dishes);
+              setIsEditMode(true);
+            }
           } else {
-            console.error("Data structure is not as expected: ", data);
+            console.error("Failed to fetch menu data");
           }
         } catch (error) {
-          console.error("Error fetching data: ", error);
+          console.error("Error fetching menu data:", error);
         }
-      
-    };
-    fetchData();
-  }, []);
+      };
+
+      fetchMenuData();
+    }
+  }, [id]);
 
   const handleDishInputChange = (index, event) => {
     const newDishes = [...dishes];
@@ -51,7 +52,6 @@ const NewMenuForm = () => {
   };
 
   const handleAddDish = () => {
-    setDishCount(dishCount + 1);
     setDishes([...dishes, { name: "", description: "", price: "", image: "" }]);
   };
 
@@ -63,37 +63,34 @@ const NewMenuForm = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    if (errorSubmit) {
-      alert("Invalid form. Cannot submit.");
-      return;
-    }
+
+    const requestBody = {
+      httpMethod: isEditMode ? "PUT" : "POST",
+      body: JSON.stringify({
+        id: formData.id,
+        title: formData.title,
+        dishes: dishes,
+      }),
+    };
+
     try {
-      const response = isEditMode
-        ? await fetch(`/api/menu_api?id=${id}`, {
-            method: "PUT",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(formData),
-          })
-        : await fetch("/api/menu_api", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(formData),
-          });
+      const response = await fetch("https://ic1ln5cze5.execute-api.us-east-1.amazonaws.com/MenuStage/createMenu", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(requestBody),
+      });
 
       if (!response.ok) {
         throw new Error("Failed to submit form data.");
       }
 
-      window.location.href = "/admin/menus";
+      router.push("/admin/manage-menu");
     } catch (error) {
-      console.error("Error:", error);
+      console.error("Error submitting menu:", error);
     }
   };
-
 
   return (
     <div className={`${style.formContainer}`}>
@@ -105,8 +102,9 @@ const NewMenuForm = () => {
             type="text"
             name="id"
             value={formData.id}
-            placeholder={isEditMode ? formData.id : ""}
+            placeholder="Enter Menu ID"
             onChange={(e) => setFormData({ ...formData, id: e.target.value })}
+            disabled={isEditMode} // Disable editing ID in update mode
           />
         </div>
         <div className={style.inputGroup}>
@@ -116,7 +114,7 @@ const NewMenuForm = () => {
             type="text"
             name="title"
             value={formData.title}
-            placeholder={isEditMode ? formData.title : ""}
+            placeholder="Enter Menu Title"
             onChange={(e) => setFormData({ ...formData, title: e.target.value })}
           />
         </div>
@@ -160,7 +158,6 @@ const NewMenuForm = () => {
               />
             </div>
             <div className={`${style.inputGroup} ${style.centered}`}>
-              <label className={style.hideLable}> a</label>
               <button
                 className={`${styleBtn.btn}`}
                 type="button"
@@ -173,24 +170,16 @@ const NewMenuForm = () => {
         ))}
 
         <div className={styleBtn.btnBottomDiv}>
-          <button
-            className={`${styleBtn.btn}`}
-            type="button"
-            onClick={handleAddDish}
-          >
+          <button className={`${styleBtn.btn}`} type="button" onClick={handleAddDish}>
             Add Dish
           </button>
-
-          <button
-            className={`${styleBtn.btn}`}
-            type="submit"
-          >
+          <button className={`${styleBtn.btn}`} type="submit">
             {isEditMode ? "Update Menu" : "Create Menu"}
           </button>
           <button
             className={`${styleBtn.btn}`}
             type="button"
-            onClick={() => window.location.href = "/admin"}
+            onClick={() => router.push("/admin/manage-menu")}
           >
             Return
           </button>

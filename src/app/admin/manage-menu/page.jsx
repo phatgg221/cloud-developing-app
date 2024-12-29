@@ -60,12 +60,15 @@ const MenuTable = () => {
   };
 
   const createButton = () => {
-    router.push("/admin/menus/form");
+    router.push("/admin/manage-menu/form");
   };
 
-  const handleUpdate = (menu) => {
-    router.push(`/admin/menus/form?id=${menu.id}`);
-  };
+
+    const handleUpdate = (menu) => {
+        router.push(`/admin/manage-menu/form?id=${menu.id}`);
+      };
+      
+
 
   return (
     <>
