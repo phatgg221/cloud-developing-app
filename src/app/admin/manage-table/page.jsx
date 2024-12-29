@@ -3,15 +3,24 @@ import { useState, useEffect } from "react";
 import React from "react";
 import SearchBar from "@/components/searchBar";
 import Image from "next/image";
-
+import { useRouter } from "next/navigation";
 const CardTable = () => {
   const [searchTerm, setSearchItem] = useState("");
   const [tableData, setTableData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const apiBaseUrl = "https://ic1ln5cze5.execute-api.us-east-1.amazonaws.com/cafeappstage/getTable";
+ const router = useRouter();
 
+
+  const createButton = () => {
+    router.push("/admin/manage-table/form");
+  };
+
+
+    const handleUpdate = (menu) => {
+        router.push(`/admin/manage-table/form?id=${menu.id}`);
+      };
   useEffect(() => {
     const fetchTableData = async () => {
       try {
@@ -44,9 +53,7 @@ const CardTable = () => {
     table.number.toString().includes(searchTerm.toLowerCase())
   );
 
-  const handleUpdate = (id) => {
-    console.log("Update table with ID:", id);
-  };
+ 
 
   const handleDelete = async (id) => {
     const requestBody = {
@@ -140,13 +147,13 @@ const CardTable = () => {
       <div className="flex justify-center items-center mt-5 mb-5 gap-5">
         <button
           className="px-6 py-3 bg-[#f8a61b] text-white rounded-md hover:bg-orange-600 transition-colors duration-150"
-          onClick={() => console.log("Create new table")}
+          onClick={createButton}
         >
           Create New Table
         </button>
         <button
           className="px-6 py-3 bg-[#f8a61b] text-white rounded-md hover:bg-orange-600 transition-colors duration-150"
-          onClick={() => console.log("Return")}
+          onClick={() => router.push("/admin")}
         >
           Return
         </button>
