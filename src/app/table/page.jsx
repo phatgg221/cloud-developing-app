@@ -3,21 +3,21 @@
 import { useState, useEffect } from 'react';
 
 export default function TablePage() {
-  const apiBaseUrl = 'https://<api-gateway-url>'; 
+  const apiBaseUrl = 'https://ic1ln5cze5.execute-api.us-east-1.amazonaws.com/cafeappstage'; 
 
   const [tables, setTables] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
-
   useEffect(() => {
     const fetchTables = async () => {
       try {
         setLoading(true);
-        const response = await fetch(`${apiBaseUrl}/tables`);
+        const response = await fetch(`${apiBaseUrl}/getTable`);
         if (!response.ok) throw new Error('Failed to fetch tables');
         const data = await response.json();
-        setTables(data);
+        const body = JSON.parse(data.body); // Parse response body
+        setTables(body.data); // Update state with fetched data
       } catch (err) {
         setError(err.message);
       } finally {
@@ -28,24 +28,29 @@ export default function TablePage() {
     fetchTables();
   }, []);
 
-  // Toggle table availability
   const toggleAvailability = async (id) => {
     const table = tables.find((t) => t.id === id);
     const updatedStatus = table.status === 'Available' ? 'Occupied' : 'Available';
 
     try {
-      const response = await fetch(`${apiBaseUrl}/tables/${id}`, {
+      // Construct the request payload
+      const requestBody = {
+        id: table.id,
+        number: table.number,
+        status: updatedStatus,
+        size: table.size,
+      };
+
+      const response = await fetch(`${apiBaseUrl}/createTable`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ status: updatedStatus }),
+        body: JSON.stringify(requestBody),
       });
+
       if (!response.ok) throw new Error('Failed to update table status');
 
-      // Update the frontend table list
       setTables((prev) =>
-        prev.map((t) =>
-          t.id === id ? { ...t, status: updatedStatus } : t
-        )
+        prev.map((t) => (t.id === id ? { ...t, status: updatedStatus } : t))
       );
     } catch (err) {
       setError(err.message);
@@ -53,6 +58,8 @@ export default function TablePage() {
   };
 
   if (loading) return <div>Loading...</div>;
+
+  if (error) return <div className="text-red-500">{error}</div>;
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-r from-green-50 via-white to-green-50">
