@@ -113,7 +113,7 @@ const NewMenuForm = () => {
             value={formData.id}
             placeholder="Enter Menu ID"
             onChange={(e) => setFormData({ ...formData, id: e.target.value })}
-            disabled={isEditMode} // Disable editing ID in update mode
+            disabled={isEditMode}
           />
         </div>
         <div className={style.inputGroup}>
