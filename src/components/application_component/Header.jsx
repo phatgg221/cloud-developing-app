@@ -16,7 +16,7 @@ import { CognitoUserAttribute } from "amazon-cognito-identity-js";
 import UserPool from './UserPool';  // Make sure this is correctly configured
 import crypto from 'crypto';
 import { CognitoUserPool, CognitoUser } from 'amazon-cognito-identity-js';
-
+import { useRouter } from "next/navigation";
 // Function to generate the SECRET_HASH
 function generateSecretHash(username, clientId, clientSecret) {
   const hmac = crypto.createHmac('sha256', clientSecret)
@@ -26,6 +26,7 @@ function generateSecretHash(username, clientId, clientSecret) {
 }
 
 const Header = () => {
+    const router= useRouter();
     const [activeTab, setActiveTab] = useState("login");
     const [username, setUsername] = useState(''); // Updated state for username
     const [password, setPassword] = useState('');
@@ -41,16 +42,16 @@ const Header = () => {
     
     const onSubmit = async (event) => {
         event.preventDefault();
-    
+      
         const clientId = "2gjpon357ujm2enjd9qcngn5lm"; // Replace with your App Client ID
         const clientSecret = "gfh21gs4f62rshdeq2obnlqd0hagou9gapo9527jkfdn8r6fne9"; // Replace with your App Client Secret
         const region = "us-east-1"; // Replace with your Cognito region
-    
+      
         // Generate the SECRET_HASH
         const secretHash = generateSecretHash(username, clientId, clientSecret);
-    
+      
         const cognito = new AWS.CognitoIdentityServiceProvider({ region });
-    
+      
         const params = {
             ClientId: clientId,
             SecretHash: secretHash,
@@ -67,16 +68,22 @@ const Header = () => {
                 },
             ],
         };
-    
+      
         try {
             const data = await cognito.signUp(params).promise();
             console.log("Sign-up successful:", data);
             alert("User registered successfully!");
+            
+            // Save the username to localStorage
+            localStorage.setItem('username', username);
+    
+            router.push('/verify-email');
         } catch (err) {
             console.error("Error during sign-up:", err);
             alert(err.message || "Error during sign-up");
         }
     };
+    
     
 
     return (
