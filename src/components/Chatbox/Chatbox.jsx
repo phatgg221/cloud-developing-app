@@ -1,33 +1,39 @@
-'use client';
-
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 export default function Chatbox() {
   const [isOpen, setIsOpen] = useState(false);
-  const [messages, setMessages] = useState([
-    { sender: 'Admin', text: 'Hi! How can I assist you today?' },
-  ]);
+  const [messages, setMessages] = useState([]);
   const [inputMessage, setInputMessage] = useState('');
+  const [webSocket, setWebSocket] = useState(null);
 
-  const toggleChatbox = () => {
-    setIsOpen(!isOpen);
-  };
+  useEffect(() => {
+    const ws = new WebSocket('wss://your-websocket-api-url'); // Replace with your WebSocket URL
+    setWebSocket(ws);
+
+    ws.onmessage = (event) => {
+      const messageData = JSON.parse(event.data);
+      setMessages((prev) => [...prev, messageData]);
+    };
+
+    ws.onclose = () => {
+      console.log('Disconnected from WebSocket');
+    };
+
+    return () => {
+      ws.close();
+    };
+  }, []);
 
   const sendMessage = () => {
     if (!inputMessage.trim()) return;
 
-    // Add customer message
-    setMessages((prev) => [...prev, { sender: 'Customer', text: inputMessage }]);
+    const message = {
+      action: 'sendMessage',
+      sender: 'Customer',
+      message: inputMessage,
+    };
 
-    // Add admin response (mock)
-    setTimeout(() => {
-      setMessages((prev) => [
-        ...prev,
-        { sender: 'Admin', text: 'Thank you for reaching out! We will get back to you shortly.' },
-      ]);
-    }, 1000);
-
-    // Clear input field
+    webSocket.send(JSON.stringify(message));
     setInputMessage('');
   };
 
@@ -36,7 +42,7 @@ export default function Chatbox() {
       {/* Chatbox Icon */}
       <div
         className="fixed bottom-4 right-4 bg-blue-500 text-white p-3 rounded-full shadow-lg cursor-pointer"
-        onClick={toggleChatbox}
+        onClick={() => setIsOpen(!isOpen)}
         title="Chat with us"
       >
         💬
@@ -48,7 +54,7 @@ export default function Chatbox() {
           <div className="bg-blue-500 text-white p-3 rounded-t-lg">
             <h2 className="text-lg font-bold">Chat with Admin</h2>
             <button
-              onClick={toggleChatbox}
+              onClick={() => setIsOpen(false)}
               className="text-white absolute top-2 right-2 font-bold"
             >
               ✕
@@ -63,7 +69,7 @@ export default function Chatbox() {
                 }`}
               >
                 <p className="text-sm">
-                  <strong>{msg.sender}:</strong> {msg.text}
+                  <strong>{msg.sender}:</strong> {msg.message}
                 </p>
               </div>
             ))}
