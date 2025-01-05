@@ -12,8 +12,8 @@ import {
     DialogTitle,
     DialogTrigger,
 } from "@/components/ui/dialog";
-import { CognitoUserAttribute } from "amazon-cognito-identity-js";
-import UserPool from './UserPool';  // Make sure this is correctly configured
+// import { CognitoUserAttribute } from "amazon-cognito-identity-js";
+// import UserPool from './UserPool';  // Make sure this is correctly configured
 import crypto from 'crypto';
 import { CognitoUserPool, CognitoUser } from 'amazon-cognito-identity-js';
 import { useRouter } from "next/navigation";
@@ -25,6 +25,9 @@ function generateSecretHash(username, clientId, clientSecret) {
   return hmac;
 }
 
+const handleLogin = () => {
+    window.location.href = '/api/login'; 
+};
 const Header = () => {
     const router= useRouter();
     const [activeTab, setActiveTab] = useState("login");
@@ -92,6 +95,7 @@ const Header = () => {
                 <div className="text-white">
                     <ul className="flex space-x-24 text-2xl">
                         <li>
+                            <Button onClick={handleLogin}>Login test </Button>
                             <Link
                                 href="/"
                                 className="transition-all hover:text-[#d4af37] font-medium "

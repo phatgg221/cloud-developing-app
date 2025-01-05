@@ -1,10 +1,26 @@
 'use client';
 
-import { useState } from 'react';
+import { useState,useEffect } from 'react';
 
 export default function BookingTable() {
   const apiBaseUrl = 'https://<api-gateway-url>'; // Replace with your API Gateway URL
+  const [user, setUser] = useState(null);
 
+    useEffect(() => {
+        const fetchUser = async () => {
+            const res = await fetch('/api/me');
+            if (res.ok) {
+                const data = await res.json();
+                setUser(data.userInfo);
+            }
+        };
+
+        fetchUser();
+    }, []);
+
+    if (!user) {
+      return <div>Please log in to access this page.</div>;
+  }
   const [formData, setFormData] = useState({
     date: '',
     time: '',
