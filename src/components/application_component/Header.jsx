@@ -38,42 +38,28 @@ const Header = () => {
     const onSubmitLogin = async (e) => {
         e.preventDefault();
     
-        const clientId = "2gjpon357ujm2enjd9qcngn5lm"; // Replace with your App Client ID
-        const clientSecret = "gfh21gs4f62rshdeq2obnlqd0hagou9gapo9527jkfdn8r6fne9"; // Replace with your App Client Secret
-        const region = "us-east-1"; // Replace with your Cognito region
-    
-        // Generate the SECRET_HASH
-        const secretHash = generateSecretHash(username, clientId, clientSecret);
-    
-        const cognito = new AWS.CognitoIdentityServiceProvider({ region });
-    
-        const params = {
-            AuthFlow: "USER_PASSWORD_AUTH",
-            ClientId: clientId,
-            AuthParameters: {
-                USERNAME: username,
-                PASSWORD: password,
-                SECRET_HASH: secretHash,
-            },
-        };
-    
         try {
-            const response = await cognito.initiateAuth(params).promise();
-            console.log("Login successful:", response);
+            const response = await fetch("/api/login", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ username, password }),
+            });
     
-            // Save tokens to localStorage or handle session management
-            const { AccessToken, IdToken, RefreshToken } = response.AuthenticationResult;
-            localStorage.setItem("accessToken", AccessToken);
-            localStorage.setItem("idToken", IdToken);
-            localStorage.setItem("refreshToken", RefreshToken);
+            if (!response.ok) {
+                const error = await response.json();
+                throw new Error(error.error || "Login failed");
+            }
     
             alert("Login successful!");
-            router.push("/"); 
+            router.push("/dashboard");
         } catch (err) {
             console.error("Login failure:", err);
             alert(err.message || "An error occurred during login.");
         }
     };
+    
     
      
     
@@ -230,6 +216,7 @@ const Header = () => {
                                         id="password"
                                         className="w-full p-2 border rounded-md"
                                         placeholder="Enter your password"
+                                        onChange={(event) => setPassword(event.target.value)}
                                     />
                                 </div>
                                 <div className="flex justify-end">
