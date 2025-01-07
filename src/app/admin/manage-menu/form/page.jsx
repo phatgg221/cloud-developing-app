@@ -77,7 +77,7 @@ const NewMenuForm = () => {
         dishes: dishes,
       }),
     };
-
+    console.log(requestBody,'requested');
     try {
       const response = await fetch("https://ic1ln5cze5.execute-api.us-east-1.amazonaws.com/MenuStage/createMenu", {
         method: "POST",

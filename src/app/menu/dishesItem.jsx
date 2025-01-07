@@ -21,7 +21,7 @@ const DishItem = ({ name, description, price, image }) => {
             if (response.ok) {
                 const data = await response.json();
                 setData(data.userInfo); 
-                console.log("User info fetched:", data.userInfo);
+
             } else {
                 // console.error("User not authenticated");
                 setData(null);
