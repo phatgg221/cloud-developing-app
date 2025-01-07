@@ -90,6 +90,9 @@ const Header = () => {
         }
     };
 
+    const onUserProfile= ()=>{
+        router.push("/user-profile");
+    }
     return (
         <header className="bg-black fixed h-[70px] top-0 w-full shadow-md z-50">
             <nav className="flex items-center justify-center space-x-20 px-20 py-4">
@@ -124,7 +127,11 @@ const Header = () => {
                 </div>
                 {user ? (
                     <div className="flex items-center space-x-4">
-                        <span className="text-white">Welcome, {user.username}</span>
+                        <div className="flex">
+                            <span className="text-white">Welcome,</span>
+                            <div onClick={onUserProfile} className="text-white hover:underline">{` ${user.username}`}</div>
+                        </div>
+                        
                         <Button
                             onClick={onLogout}
                             className="bg-[#d4af37] text-black hover:bg-[#b59e2d] transition-all px-6 py-2 rounded-lg font-medium"
