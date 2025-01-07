@@ -1,9 +1,41 @@
+import { serialize } from "cookie";
+
 export default function handler(req, res) {
-    res.setHeader('Set-Cookie', [
-        `token=; HttpOnly; Path=/; Max-Age=0;`,
-        `userInfo=; Path=/; Max-Age=0;`,
+    if (req.method !== "POST") {
+        return res.status(405).json({ error: "Method not allowed" });
+    }
+
+    // Clear cookies by setting them with an expired maxAge
+    res.setHeader("Set-Cookie", [
+        serialize("accessToken", "", {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === "production",
+            sameSite: "strict",
+            path: "/",
+            maxAge: 0, // Expire immediately
+        }),
+        serialize("idToken", "", {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === "production",
+            sameSite: "strict",
+            path: "/",
+            maxAge: 0,
+        }),
+        serialize("refreshToken", "", {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === "production",
+            sameSite: "strict",
+            path: "/",
+            maxAge: 0,
+        }),
+        serialize("userInfo", "", {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === "production",
+            sameSite: "strict",
+            path: "/",
+            maxAge: 0,
+        }),
     ]);
-    const logout_url= 'http://localhost:3000';
-    const logoutUrl = `https://us-east-11v56lb2gv.auth.us-east-1.amazoncognito.com/logout?client_id=2gjpon357ujm2enjd9qcngn5lm&logout_uri=${logout_url}`;
-    res.redirect(logoutUrl);
+
+    return res.status(200).json({ message: "Logged out successfully" });
 }
