@@ -30,9 +30,9 @@ const Header = () => {
             if (response.ok) {
                 const data = await response.json();
                 setUser(data.userInfo); 
-                console.log("User info fetched:", data.userInfo);
+                // console.log("User info fetched:", data.userInfo);
             } else {
-                console.error("User not authenticated");
+                // console.error("User not authenticated");
                 setUser(null); // Clear user state if not authenticated
             }
         } catch (error) {

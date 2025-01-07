@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState,useEffect} from "react";
 import {
     Dialog,
     DialogContent,
@@ -8,7 +8,35 @@ import {
     DialogTrigger,
 } from "@/components/ui/dialog";
 
-const DishItem = ({ name, description, price, image }) => (
+const DishItem = ({ name, description, price, image }) => {
+  
+  const[data, setData]= useState(null);
+
+  
+  
+  const fetchUserInfo = async () => {
+        try {
+            const response = await fetch("/api/me");
+            if (response.ok) {
+                const data = await response.json();
+                setUser(data.userInfo); 
+                // console.log("User info fetched:", data.userInfo);
+            } else {
+                // console.error("User not authenticated");
+                setData(null);
+            }
+        } catch (error) {
+            console.error("Error fetching user info:", error);
+        }
+    };
+  
+  useEffect(() => {
+          fetchUserInfo();
+      }, []);
+  
+  
+  
+  return (
   <div className="flex flex-col md:flex-row justify-between items-start mb-4 border-b border-gray-300 pb-2 max-w-md mx-auto relative group">
     <div>
       <h2 className="font-bold text-xl md:text-2xl">{name}</h2>
@@ -37,7 +65,7 @@ const DishItem = ({ name, description, price, image }) => (
         </div>
         <div className="flex justify-end mt-4">
           <button className="bg-green-500 text-white px-4 py-2 rounded-md mr-2">
-            Confirm Order
+            {data ? "Confirm Order":"Please login to order"}
           </button>
           <button className="bg-gray-500 text-white px-4 py-2 rounded-md">
             Cancel
@@ -46,6 +74,6 @@ const DishItem = ({ name, description, price, image }) => (
       </DialogContent>
     </Dialog>
   </div>
-);
+);}
 
 export default DishItem;

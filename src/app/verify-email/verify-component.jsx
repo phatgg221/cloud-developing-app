@@ -8,7 +8,7 @@ export default function VerifyEmail() {
   const [verificationCode, setVerificationCode] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
-  const [username, setUsername] = useState(null); // State to store username
+  const [username, setUsername] = useState(null); 
   const router = useRouter();
 
   useEffect(() => {
