@@ -7,7 +7,7 @@ import {
     DialogTitle,
     DialogTrigger,
 } from "@/components/ui/dialog";
-
+// import Image from "next/image";
 const DishItem = ({ name, description, price, image }) => {
   
   const[data, setData]= useState(null);
@@ -19,8 +19,8 @@ const DishItem = ({ name, description, price, image }) => {
             const response = await fetch("/api/me");
             if (response.ok) {
                 const data = await response.json();
-                setUser(data.userInfo); 
-                // console.log("User info fetched:", data.userInfo);
+                setData(data.userInfo); 
+                console.log("User info fetched:", data.userInfo);
             } else {
                 // console.error("User not authenticated");
                 setData(null);
@@ -58,7 +58,7 @@ const DishItem = ({ name, description, price, image }) => {
           </DialogDescription>
         </DialogHeader>
         <div className="mt-4">
-          <img src={image} alt={name} className="w-full h-auto rounded-md mb-4" />
+          <img width={100} height={100} src={image} alt={name} className="w-full h-auto rounded-md mb-4" />
           <p className="text-gray-700">
             Price: <span className="text-yellow-500">{price}</span>
           </p>
