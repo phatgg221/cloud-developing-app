@@ -8,7 +8,8 @@ export default function TablePage() {
   const [tables, setTables] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const [data, setData]= useState(null);
+  const [data, setData] = useState(null);
+
   useEffect(() => {
     const fetchTables = async () => {
       try {
@@ -27,31 +28,30 @@ export default function TablePage() {
 
     fetchTables();
   }, []);
+
   const fetchUserInfo = async () => {
     try {
-        const response = await fetch("/api/me");
-        if (response.ok) {
-            const data = await response.json();
-            setUser(data.userInfo); 
-            // console.log("User info fetched:", data.userInfo);
-        } else {
-            // console.error("User not authenticated");
-            setData(null);
-        }
+      const response = await fetch("/api/me");
+      if (response.ok) {
+        const userInfo = await response.json();
+        setData(userInfo.userInfo); 
+      } else {
+        setData(null);
+      }
     } catch (error) {
-        console.error("Error fetching user info:", error);
+      console.error("Error fetching user info:", error);
     }
-};
- useEffect(() => {
-          fetchUserInfo();
-      }, []);
+  };
+
+  useEffect(() => {
+    fetchUserInfo();
+  }, []);
 
   const toggleAvailability = async (id) => {
     const table = tables.find((t) => t.id === id);
     const updatedStatus = table.status === 'Available' ? 'Occupied' : 'Available';
 
     try {
-      // Construct the request payload
       const requestBody = {
         id: table.id,
         number: table.number,
@@ -85,13 +85,14 @@ export default function TablePage() {
         <h1 className="text-3xl font-bold text-gray-700 mb-6 text-center">
           Available Tables
         </h1>
+        {!data && <div>Please login to book table</div>}
         <table className="table-auto w-full border-collapse border border-gray-300">
           <thead>
             <tr className="bg-gray-100">
               <th className="border border-gray-300 px-4 py-2 text-left">Table Number</th>
               <th className="border border-gray-300 px-4 py-2 text-left">Status</th>
               <th className="border border-gray-300 px-4 py-2 text-left">Size</th>
-              <th className="border border-gray-300 px-4 py-2 text-left">Status</th>
+              <th className="border border-gray-300 px-4 py-2 text-left">Availability</th>
               <th className="border border-gray-300 px-4 py-2 text-center">Action</th>
             </tr>
           </thead>
@@ -108,21 +109,25 @@ export default function TablePage() {
                 </td>
                 <td className="border border-gray-300 px-4 py-2">{table.size}</td>
                 <td className="border border-gray-300 px-4 py-2">
-                  <div className={`px-4 py-2 rounded-md shadow ${
-                      table.status !== 'Available'
-                        ? 'bg-red-500 text-white hover:bg-red-600'
-                        : 'bg-green-500 text-white hover:bg-green-600'
-                    }`}>
-                        {table.status === 'Available' ? 'Available' : 'Unavailable'}
-                  </div></td>
+                  <div
+                    className={`px-4 py-2 rounded-md shadow ${
+                      table.status === 'Available'
+                        ? 'bg-green-500 text-white'
+                        : 'bg-red-500 text-white'
+                    }`}
+                  >
+                    {table.status === 'Available' ? 'Available' : 'Unavailable'}
+                  </div>
+                </td>
                 <td className="border border-gray-300 px-4 py-2 text-center">
                   <button
                     onClick={() => toggleAvailability(table.id)}
+                    disabled={!data} // Disable button if the user is not logged in
                     className={`px-4 py-2 rounded-md shadow ${
                       table.status === 'Available'
                         ? 'bg-red-500 text-white hover:bg-red-600'
                         : 'bg-green-500 text-white hover:bg-green-600'
-                    }`}
+                    } ${!data ? 'opacity-50 cursor-not-allowed' : ''}`} // Add styles for disabled state
                   >
                     {table.status === 'Available' ? 'Mark Occupied' : 'Mark Available'}
                   </button>
