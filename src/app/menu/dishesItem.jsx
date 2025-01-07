@@ -7,7 +7,8 @@ import {
     DialogTitle,
     DialogTrigger,
 } from "@/components/ui/dialog";
-// import Image from "next/image";
+import ConfirmDialog from "./confirmDialog";
+
 const DishItem = ({ name, description, price, image }) => {
   
   const[data, setData]= useState(null);
@@ -45,7 +46,6 @@ const DishItem = ({ name, description, price, image }) => {
     <div className="text-yellow-500 pt-2 text-lg md:text-xl">{price}</div>
     <Dialog>
       <DialogTrigger asChild>
-        {/* Order Button */}
         <button className="absolute top-0 right-0 bg-yellow-500 text-white py-1 px-4 rounded-md opacity-0 group-hover:opacity-100 transform group-hover:translate-y-2 transition duration-300 ease-in-out">
           Order
         </button>
@@ -64,9 +64,15 @@ const DishItem = ({ name, description, price, image }) => {
           </p>
         </div>
         <div className="flex justify-end mt-4">
-          <button className="bg-green-500 text-white px-4 py-2 rounded-md mr-2">
+          <Dialog>
+            <DialogTrigger asChild>
+            <button className="bg-green-500 text-white px-4 py-2 rounded-md mr-2">
             {data ? "Confirm Order":"Please login to order"}
           </button>
+            </DialogTrigger>
+            <ConfirmDialog username={data?.username} foodname={name} price={price}></ConfirmDialog>
+          </Dialog>
+          
           <button className="bg-gray-500 text-white px-4 py-2 rounded-md">
             Cancel
           </button>
