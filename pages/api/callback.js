@@ -16,7 +16,7 @@ export default async function handler(req, res) {
     const client = new issuer.Client({
         client_id: '2gjpon357ujm2enjd9qcngn5lm',
         client_secret: 'gfh21gs4f62rshdeq2obnlqd0hagou9gapo9527jkfdn8r6fne9',
-        redirect_uris: ['http://localhost:3000/api/callback'], // Must match login request
+        redirect_uris: ['http://localhost:3000/api/callback'], 
         response_types: ['code'],
     });
 
