@@ -41,6 +41,8 @@ export default async function handler(req, res) {
         const userInfo = {
             username: user.Username,
             email: user.UserAttributes.find(attr => attr.Name === "email").Value, // Extract email
+            name: user.UserAttributes.find(attr => attr.Name === "name")?.Value || "Unknown",
+
         };
 
         // Set cookies (secure and HTTP-only)

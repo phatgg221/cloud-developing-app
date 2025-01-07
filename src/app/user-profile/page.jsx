@@ -1,8 +1,8 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-
-const apiBaseUrl = "http://localhost:3000";
+import { useRouter } from "next/navigation";
+// const apiBaseUrl = "http://localhost:3000";
 
 
 const UserProfile = ({ apiBaseUrl, userId }) => {
@@ -13,10 +13,13 @@ const UserProfile = ({ apiBaseUrl, userId }) => {
     const [confirmPassword, setConfirmPassword] = useState("");
     const [error, setError] = useState("");
     const [success, setSuccess] = useState("");
-
+    const router= useRouter();
+    if(!userData){
+        router.push('/')
+    }
     useEffect(() => {
         // Fetch user data from API
-        fetch(`${apiBaseUrl}/users/${userId}`)
+        fetch(`/api/me`)
             .then((response) => {
                 if (!response.ok) {
                     throw new Error("Failed to fetch user data");
@@ -49,7 +52,7 @@ const UserProfile = ({ apiBaseUrl, userId }) => {
         }
 
         try {
-            const response = await fetch(`${apiBaseUrl}/users/${userId}`, {
+            const response = await fetch(`/api/me}`, {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json",

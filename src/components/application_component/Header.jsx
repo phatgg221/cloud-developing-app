@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import { Button } from "../ui/button";
 import Image from "next/image";
 import Link from "next/link";
+import crypto from 'crypto';
 import { useRouter } from "next/navigation";
 import {
     Dialog,
@@ -12,6 +13,7 @@ import {
     DialogTitle,
     DialogTrigger,
 } from "@/components/ui/dialog";
+import AWS from 'aws-sdk';
 const Header = () => {
     const router = useRouter();
     const [activeTab, setActiveTab] = useState("login");
@@ -37,7 +39,12 @@ const Header = () => {
             console.error("Error fetching user info:", error);
         }
     };
-
+    function generateSecretHash(username, clientId, clientSecret) {
+        const hmac = crypto.createHmac('sha256', clientSecret)
+                          .update(username + clientId)
+                          .digest('base64');
+        return hmac;
+      }
     // Fetch user info when the component mounts
     useEffect(() => {
         fetchUserInfo();
@@ -69,7 +76,48 @@ const Header = () => {
             alert(err.message || "An error occurred during login.");
         }
     };
-
+    const onSubmit = async (event) => {
+        event.preventDefault();
+      
+        const clientId = "2gjpon357ujm2enjd9qcngn5lm"; // Replace with your App Client ID
+        const clientSecret = "gfh21gs4f62rshdeq2obnlqd0hagou9gapo9527jkfdn8r6fne9"; // Replace with your App Client Secret
+        const region = "us-east-1"; // Replace with your Cognito region
+        // Generate the SECRET_HASH
+        const secretHash = generateSecretHash(username, clientId, clientSecret);
+      
+        const cognito = new AWS.CognitoIdentityServiceProvider({ region });
+      
+        const params = {
+            ClientId: clientId,
+            SecretHash: secretHash,
+            Username: username,
+            Password: password,
+            UserAttributes: [
+                {
+                    Name: "email",
+                    Value: email,
+                },
+                {
+                    Name: "name",
+                    Value: name,
+                },
+            ],
+        };
+      
+        try {
+            const data = await cognito.signUp(params).promise();
+            console.log("Sign-up successful:", data);
+            alert("User registered successfully!");
+            
+            // Save the username to localStorage
+            localStorage.setItem('username', username);
+    
+            router.push('/verify-email');
+        } catch (err) {
+            console.error("Error during sign-up:", err);
+            alert(err.message || "Error during sign-up");
+        }
+    };
     // Handle logout
     const onLogout = async () => {
         try {
@@ -215,6 +263,66 @@ const Header = () => {
                                     </div>
                                 </form>
                             )}
+                            {activeTab === "register" && (
+                            <form className="space-y-4" onSubmit={onSubmit}>
+                                <div>
+                                    <label htmlFor="name" className="block font-medium">
+                                        Name
+                                    </label>
+                                    <input
+                                        type="text"
+                                        id="name"
+                                        className="w-full p-2 border rounded-md"
+                                        placeholder="Enter your name"
+                                        onChange={(event) => setName(event.target.value)}
+                                    />
+                                </div>
+                                <div>
+                                    <label htmlFor="email" className="block font-medium">
+                                        Email
+                                    </label>
+                                    <input
+                                        type="email"
+                                        id="email"
+                                        className="w-full p-2 border rounded-md"
+                                        placeholder="Enter your email"
+                                        onChange={(event) => setEmail(event.target.value)} 
+                                    />
+                                </div>
+                                <div>
+                                    <label htmlFor="username" className="block font-medium">
+                                        Username
+                                    </label>
+                                    <input
+                                        type="text" 
+                                        id="username" 
+                                        className="w-full p-2 border rounded-md"
+                                        placeholder="Enter your username"
+                                        onChange={(event) => setUsername(event.target.value)} 
+                                    />
+                                </div>
+                                <div>
+                                    <label htmlFor="password" className="block font-medium">
+                                        Password
+                                    </label>
+                                    <input
+                                        type="password"
+                                        id="password"
+                                        className="w-full p-2 border rounded-md"
+                                        placeholder="Enter your password"
+                                        onChange={(event) => setPassword(event.target.value)}
+                                    />
+                                </div>
+                                <div className="flex justify-end">
+                                    <Button
+                                        type="submit"
+                                        className="bg-[#d4af37] text-black hover:bg-[#b59e2d] transition-all px-4 py-2 rounded-md"
+                                    >
+                                        Register
+                                    </Button>
+                                </div>
+                            </form>
+                        )}
                         </DialogContent>
                     </Dialog>
                 )}
