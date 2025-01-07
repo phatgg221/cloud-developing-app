@@ -5,7 +5,7 @@ export default function Chatbox() {
   const [messages, setMessages] = useState([]);
   const [inputMessage, setInputMessage] = useState('');
   const [webSocket, setWebSocket] = useState(null);
-
+  const [data , setData]= useState(null);
   useEffect(() => {
     const ws = new WebSocket('wss://your-websocket-api-url'); // Replace with your WebSocket URL
     setWebSocket(ws);
@@ -23,7 +23,26 @@ export default function Chatbox() {
       ws.close();
     };
   }, []);
-
+ const fetchUserInfo = async () => {
+        try {
+            const response = await fetch("/api/me");
+            if (response.ok) {
+                const data = await response.json();
+                setUser(data.userInfo); 
+                // console.log("User info fetched:", data.userInfo);
+            } else {
+                // console.error("User not authenticated");
+                setData(null);
+            }
+        } catch (error) {
+            console.error("Error fetching user info:", error);
+        }
+    };
+  
+  useEffect(() => {
+          fetchUserInfo();
+      }, []);
+  
   const sendMessage = () => {
     if (!inputMessage.trim()) return;
 
@@ -49,7 +68,7 @@ export default function Chatbox() {
       </div>
 
       {/* Chat Window */}
-      {isOpen && (
+      {isOpen && data && (
         <div className="fixed bottom-16 right-4 w-80 bg-white shadow-lg rounded-lg">
           <div className="bg-blue-500 text-white p-3 rounded-t-lg">
             <h2 className="text-lg font-bold">Chat with Admin</h2>
@@ -90,6 +109,23 @@ export default function Chatbox() {
               Send
             </button>
           </div>
+        </div>
+      )}
+      {isOpen && !data && (
+        <div className="fixed bottom-16 right-4 w-80 bg-white shadow-lg rounded-lg">
+          <div className="bg-blue-500 text-white p-3 rounded-t-lg">
+            <h2 className="text-lg font-bold">Chat with Admin</h2>
+            <button
+              onClick={() => setIsOpen(false)}
+              className="text-white absolute top-2 right-2 font-bold"
+            >
+              ✕
+            </button>
+          </div>
+          <div className="p-4 h-64 overflow-y-auto space-y-2">
+             Please login to chat with admin
+          </div>
+          
         </div>
       )}
     </div>
