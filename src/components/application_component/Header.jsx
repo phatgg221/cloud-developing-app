@@ -13,21 +13,13 @@ import {
     DialogTrigger,
 } from "@/components/ui/dialog";
 // import { CognitoUserAttribute } from "amazon-cognito-identity-js";
-// import UserPool from './UserPool';  // Make sure this is correctly configured
+import UserPool from './UserPool';  // Make sure this is correctly configured
 import crypto from 'crypto';
-import { CognitoUserPool, CognitoUser } from 'amazon-cognito-identity-js';
+import { AuthenticationDetails, CognitoUser } from 'amazon-cognito-identity-js';
 import { useRouter } from "next/navigation";
 // Function to generate the SECRET_HASH
-function generateSecretHash(username, clientId, clientSecret) {
-  const hmac = crypto.createHmac('sha256', clientSecret)
-                    .update(username + clientId)
-                    .digest('base64');
-  return hmac;
-}
 
-const handleLogin = () => {
-    window.location.href = '/api/login'; 
-};
+;
 const Header = () => {
     const router= useRouter();
     const [activeTab, setActiveTab] = useState("login");
@@ -42,6 +34,48 @@ const Header = () => {
             .update(username + clientId)
             .digest("base64");
     }
+
+    const onSubmitLogin = async (e) => {
+        e.preventDefault();
+    
+        const clientId = "2gjpon357ujm2enjd9qcngn5lm"; // Replace with your App Client ID
+        const clientSecret = "gfh21gs4f62rshdeq2obnlqd0hagou9gapo9527jkfdn8r6fne9"; // Replace with your App Client Secret
+        const region = "us-east-1"; // Replace with your Cognito region
+    
+        // Generate the SECRET_HASH
+        const secretHash = generateSecretHash(username, clientId, clientSecret);
+    
+        const cognito = new AWS.CognitoIdentityServiceProvider({ region });
+    
+        const params = {
+            AuthFlow: "USER_PASSWORD_AUTH",
+            ClientId: clientId,
+            AuthParameters: {
+                USERNAME: username,
+                PASSWORD: password,
+                SECRET_HASH: secretHash,
+            },
+        };
+    
+        try {
+            const response = await cognito.initiateAuth(params).promise();
+            console.log("Login successful:", response);
+    
+            // Save tokens to localStorage or handle session management
+            const { AccessToken, IdToken, RefreshToken } = response.AuthenticationResult;
+            localStorage.setItem("accessToken", AccessToken);
+            localStorage.setItem("idToken", IdToken);
+            localStorage.setItem("refreshToken", RefreshToken);
+    
+            alert("Login successful!");
+            router.push("/"); 
+        } catch (err) {
+            console.error("Login failure:", err);
+            alert(err.message || "An error occurred during login.");
+        }
+    };
+    
+     
     
     const onSubmit = async (event) => {
         event.preventDefault();
@@ -95,7 +129,7 @@ const Header = () => {
                 <div className="text-white">
                     <ul className="flex space-x-24 text-2xl">
                         <li>
-                            <Button onClick={handleLogin}>Login test </Button>
+                            {/* <div className="w-14"></div> */}
                             <Link
                                 href="/"
                                 className="transition-all hover:text-[#d4af37] font-medium "
@@ -199,7 +233,7 @@ const Header = () => {
                                     />
                                 </div>
                                 <div className="flex justify-end">
-                                    <Button className="bg-[#d4af37] text-black hover:bg-[#b59e2d] transition-all px-4 py-2 rounded-md">
+                                    <Button onClick={onSubmitLogin} className="bg-[#d4af37] text-black hover:bg-[#b59e2d] transition-all px-4 py-2 rounded-md">
                                         Login
                                     </Button>
                                 </div>
