@@ -2,33 +2,51 @@
 
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-// const apiBaseUrl = "http://localhost:3000";
 
-
-const UserProfile = ({ apiBaseUrl, userId }) => {
-    const [userData, setUserData] = useState({ name: "", email: "" });
+// Assuming you have user information passed via props or fetched from an API
+const UserProfile = ({ apiBaseUrl, userId, userInfo }) => {
+    const [userData, setUserData] = useState(userInfo || null);
     const [isEditing, setIsEditing] = useState(false);
     const [oldPassword, setOldPassword] = useState("");
     const [newPassword, setNewPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
     const [error, setError] = useState("");
     const [success, setSuccess] = useState("");
-    const router= useRouter();
-    if(!userData){
-        router.push('/')
-    }
+    const [loading, setLoading] = useState(true); // Loading state
+    const router = useRouter();
+
+    // If no userData is available, redirect to the home page
     useEffect(() => {
-        // Fetch user data from API
-        fetch(`/api/me`)
-            .then((response) => {
-                if (!response.ok) {
-                    throw new Error("Failed to fetch user data");
-                }
-                return response.json();
-            })
-            .then((data) => setUserData(data))
-            .catch((err) => setError(err.message));
-    }, [apiBaseUrl, userId]);
+        if (!userData && !loading) {
+            // Only redirect after the data has finished loading
+            router.push('/');
+        }
+    }, [userData, router, loading]);
+
+    // Optionally, you can fetch user data from an API (if not passed in props)
+    useEffect(() => {
+        if (!userInfo) {
+            // Fetch user data from API (example endpoint `/api/me`)
+            fetch(`/api/me`)
+                .then((response) => {
+                    if (!response.ok) {
+                        throw new Error("Failed to fetch user data");
+                    }
+                    return response.json();
+                })
+                .then((data) => {
+                    // console.log(data.userInf, 'dadaa')
+                    setUserData(data.userInfo);
+                    setLoading(false); // Set loading to false after data is fetched
+                })
+                .catch((err) => {
+                    setError(err.message);
+                    setLoading(false); // Set loading to false in case of an error
+                });
+        } else {
+            setLoading(false); // If userInfo is passed in props, no need to fetch again
+        }
+    }, [apiBaseUrl, userId, userInfo]);
 
     const handleSave = async () => {
         setError(""); // Clear any previous error
@@ -52,7 +70,7 @@ const UserProfile = ({ apiBaseUrl, userId }) => {
         }
 
         try {
-            const response = await fetch(`/api/me}`, {
+            const response = await fetch(`/api/me`, {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json",
@@ -76,6 +94,11 @@ const UserProfile = ({ apiBaseUrl, userId }) => {
         }
     };
 
+
+    if (loading) {
+        return <p>Loading...</p>;
+    }
+
     return (
         <div style={{ maxWidth: "400px", margin: "0 auto", padding: "20px" }}>
             <h2>User Profile</h2>
@@ -86,7 +109,7 @@ const UserProfile = ({ apiBaseUrl, userId }) => {
                 <label>Name:</label>
                 <input
                     type="text"
-                    value={userData.name}
+                    value={userData.name|| ''}
                     onChange={(e) => setUserData({ ...userData, name: e.target.value })}
                     disabled={!isEditing}
                     style={{ width: "100%", padding: "8px", marginTop: "5px" }}

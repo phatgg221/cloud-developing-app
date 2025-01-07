@@ -1,13 +1,14 @@
 import { useState, useEffect } from 'react';
 
 export default function Chatbox() {
+  const [user,setUser]= useState(null);
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState([]);
   const [inputMessage, setInputMessage] = useState('');
   const [webSocket, setWebSocket] = useState(null);
   const [data , setData]= useState(null);
   useEffect(() => {
-    const ws = new WebSocket('wss://your-websocket-api-url'); // Replace with your WebSocket URL
+    const ws = new WebSocket('wss://your-websocket-api-url');
     setWebSocket(ws);
 
     ws.onmessage = (event) => {
@@ -29,10 +30,9 @@ export default function Chatbox() {
             if (response.ok) {
                 const data = await response.json();
                 setUser(data.userInfo); 
-                // console.log("User info fetched:", data.userInfo);
+
             } else {
-                // console.error("User not authenticated");
-                setData(null);
+                setUser(null);
             }
         } catch (error) {
             console.error("Error fetching user info:", error);
