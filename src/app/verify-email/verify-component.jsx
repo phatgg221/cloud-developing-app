@@ -1,5 +1,5 @@
 'use client';
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -8,10 +8,16 @@ export default function VerifyEmail() {
   const [verificationCode, setVerificationCode] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
+  const [username, setUsername] = useState(null); // State to store username
   const router = useRouter();
 
-  // Retrieve the username from localStorage
-  const username = localStorage.getItem("username");
+  useEffect(() => {
+    // Check if we're on the client side and then get the username
+    if (typeof window !== "undefined") {
+      const storedUsername = localStorage.getItem("username");
+      setUsername(storedUsername);
+    }
+  }, []);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
