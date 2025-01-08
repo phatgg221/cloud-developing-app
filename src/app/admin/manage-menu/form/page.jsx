@@ -18,7 +18,6 @@ const NewMenuForm = () => {
   if(!user && !user?.isAdmin){
     router.push('/');
   }
-  console.log(user)
     useEffect(() => {
        const fetchUserInfo = async () => {
          try {
