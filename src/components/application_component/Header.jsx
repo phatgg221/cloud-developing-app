@@ -68,9 +68,14 @@ const Header = () => {
                 throw new Error(error.error || "Login failed");
             }
 
+            const result= await response.json();
             alert("Login successful!");
             fetchUserInfo(); // Fetch user info again after successful login
-            router.push("/");
+            if(result.isAdmin){
+                router.push("/admin");
+            }else{
+                router.push("/");
+            }
         } catch (err) {
             console.error("Login failure:", err);
             alert(err.message || "An error occurred during login.");

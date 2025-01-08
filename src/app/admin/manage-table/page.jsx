@@ -1,7 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
 import React from "react";
-import SearchBar from "@/components/searchBar";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 const CardTable = () => {
@@ -9,9 +8,26 @@ const CardTable = () => {
   const [tableData, setTableData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
+  const [accessToken, setAccessToken] = useState("");
  const router = useRouter();
 
+ useEffect(()=>{
+  const fetchUserInfo= async () =>{
+    try{
+      const response = await fetch ("/api/me");
+
+      if(response.ok){
+        const token = document.cookie
+        .split("; ")
+        .find((row) => row.startsWith("accessToken="))
+        ?.split("=")[1];
+      setAccessToken(token);
+      }
+    }catch(err){
+
+    }
+  }
+ })
 
   const createButton = () => {
     router.push("/admin/manage-table/form");
@@ -30,7 +46,6 @@ const CardTable = () => {
         if (response.ok) {
           const data = await response.json();
           const body = JSON.parse(data.body);
-          console.log(body.data);
           setTableData(body.data);
         } else {
           console.error("Failed to fetch data");
@@ -86,11 +101,6 @@ const CardTable = () => {
   return (
     <>
       <h1 className="font-bold text-5xl text-[#f8a61b]">Manage Tables</h1>
-      <SearchBar
-        placeholder="Search for table number"
-        onChange={handleSearchInput}
-        showButton={true}
-      />
       <div className="flex justify-center items-center mb-5 overflow-x-auto">
         <table className="table-auto w-[95%] border border-black">
           <thead className="bg-[#f8a61b] text-white text-lg md:text-xl font-extrabold">
