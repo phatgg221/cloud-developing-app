@@ -39,6 +39,14 @@ export default function Page() {
           <span className="absolute inset-0 h-0 bg-[#f8a61b] transition-all duration-700 rounded-t-full z-[-1] hover:h-full"></span>
           Manage Users
         </Button>
+        <Button
+          className="relative overflow-hidden text-white bg-none border border-[#f8a61b] font-extrabold rounded-md text-xl px-5 py-2.5 mx-2 transition-all duration-700 hover:text-[#f8a61b]"
+          onClick={() => handleNavigation('/admin/manage-ordering-food')}
+        >
+          <span className="absolute inset-0 h-0 bg-[#f8a61b] transition-all duration-700 rounded-t-full z-[-1] hover:h-full"></span>
+          Manage Ordering food
+
+        </Button>
       </div>
     </div>
   );
