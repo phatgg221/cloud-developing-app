@@ -9,25 +9,34 @@ const CardTable = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [accessToken, setAccessToken] = useState("");
+  const [data, setData]= useState(null);
  const router = useRouter();
-
- useEffect(()=>{
-  const fetchUserInfo= async () =>{
-    try{
-      const response = await fetch ("/api/me");
-
-      if(response.ok){
-        const token = document.cookie
-        .split("; ")
-        .find((row) => row.startsWith("accessToken="))
-        ?.split("=")[1];
-      setAccessToken(token);
-      }
-    }catch(err){
-
-    }
-  }
- })
+ if(data && !data.isAdmin){
+  router.push('/');
+}
+  useEffect(() => {
+     const fetchUserInfo = async () => {
+       try {
+         const response = await fetch("/api/me");
+         if (response.ok) {
+           const userInfo = await response.json();
+           setData(userInfo.userInfo);
+ 
+           const token = document.cookie
+             .split("; ")
+             .find((row) => row.startsWith("accessToken="))
+             ?.split("=")[1];
+           setAccessToken(token);
+         } else {
+           setData(null);
+         }
+       } catch (error) {
+         console.error("Error fetching user info:", error);
+       }
+     };
+ 
+     fetchUserInfo();
+   }, []);
 
   const createButton = () => {
     router.push("/admin/manage-table/form");
@@ -41,7 +50,13 @@ const CardTable = () => {
     const fetchTableData = async () => {
       try {
         const response = await fetch(
-          "https://ic1ln5cze5.execute-api.us-east-1.amazonaws.com/cafeappstage/getTable"
+          "https://ic1ln5cze5.execute-api.us-east-1.amazonaws.com/cafeappstage/getTable",
+          {
+            method: "GET",
+          headers: {
+            Authorization: `Bearer ${accessToken}`, 
+          },
+          }
         );
         if (response.ok) {
           const data = await response.json();
