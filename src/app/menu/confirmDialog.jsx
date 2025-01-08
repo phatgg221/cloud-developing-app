@@ -111,11 +111,11 @@ const ConfirmDialog = ({ username, foodname, price, apiEndpoint }) => {
               ></textarea>
             </div>
 
-            {/* Success/Error Messages */}
+
             {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
             {success && <p className="text-green-500 text-sm mb-4">{success}</p>}
 
-            {/* Confirm and Cancel Buttons */}
+      
             <div className="flex justify-end">
               <button
                 type="submit"
