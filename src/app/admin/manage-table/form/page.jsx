@@ -6,6 +6,8 @@ import styleBtn from "../../../../styles/table.module.css";
 
 const NewTableForm = () => {
   const router = useRouter();
+  const [accessToken, setAccessToken] = useState("");
+  const [data, setData]= useState(null);
   const [id,setId]=useState('');
     function Search() {
       const searchParams = useSearchParams();
@@ -13,7 +15,7 @@ const NewTableForm = () => {
       setId(id);
       return <div></div>;
     }
-
+  
   const [isEditMode, setIsEditMode] = useState(false);
   const [formData, setFormData] = useState({
     id: "",
@@ -21,7 +23,32 @@ const NewTableForm = () => {
     status: "Available",
     size: "",
   });
-
+   if(data && !data.isAdmin){
+    router.push('/');
+  }
+    useEffect(() => {
+       const fetchUserInfo = async () => {
+         try {
+           const response = await fetch("/api/me");
+           if (response.ok) {
+             const userInfo = await response.json();
+             setData(userInfo.userInfo);
+   
+             const token = document.cookie
+               .split("; ")
+               .find((row) => row.startsWith("accessToken="))
+               ?.split("=")[1];
+             setAccessToken(token);
+           } else {
+             setData(null);
+           }
+         } catch (error) {
+           console.error("Error fetching user info:", error);
+         }
+       };
+   
+       fetchUserInfo();
+     }, []);
   useEffect(() => {
     if (id) {
       // Fetch table data if `id` is present (update mode)

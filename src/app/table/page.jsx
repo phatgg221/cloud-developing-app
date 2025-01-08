@@ -1,9 +1,10 @@
 "use client";
 
+import { CloudCog } from "lucide-react";
 import { useState, useEffect } from "react";
 
 export default function TablePage() {
-  const apiBaseUrl = "https://ic1ln5cze5.execute-api.us-east-1.amazonaws.com/cafeappstage";
+  
 
   const [tables, setTables] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -24,6 +25,7 @@ export default function TablePage() {
             .split("; ")
             .find((row) => row.startsWith("accessToken="))
             ?.split("=")[1];
+            console.log(token)
           setAccessToken(token);
         } else {
           setData(null);
@@ -40,14 +42,14 @@ export default function TablePage() {
     const fetchTables = async () => {
       try {
         setLoading(true);
-        if (!accessToken) {
-          throw new Error("No access token available");
-        }
+        // if (!accessToken) {
+        //   throw new Error("No access token available");
+        // }
 
-        const response = await fetch(`${apiBaseUrl}/getTable`, {
+        const response = await fetch(`https://ic1ln5cze5.execute-api.us-east-1.amazonaws.com/cafeappstage/getTable`, {
           method: "GET",
           headers: {
-            Authorization: `Bearer ${accessToken}`, 
+            // Authorization: `Bearer ${accessToken}`, 
           },
         });
         
@@ -62,7 +64,7 @@ export default function TablePage() {
         setLoading(false);
       }
     };
-
+    fetchTables();
     if (accessToken) {
       fetchTables();
     }
