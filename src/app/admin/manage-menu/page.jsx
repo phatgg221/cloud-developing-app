@@ -15,6 +15,34 @@ import { useRouter } from "next/navigation";
 const MenuTable = () => {
   const [data, setData] = useState([]);
   const router = useRouter();
+  const [user, setUser]= useState(null);
+  if(!user && !user?.isAdmin){
+    router.push('/');
+  }
+  console.log(user)
+    useEffect(() => {
+       const fetchUserInfo = async () => {
+         try {
+           const response = await fetch("/api/me");
+           if (response.ok) {
+             const userInfo = await response.json();
+             setUser(userInfo.userInfo);
+   
+             const token = document.cookie
+               .split("; ")
+               .find((row) => row.startsWith("accessToken="))
+               ?.split("=")[1];
+             setAccessToken(token);
+           } else {
+            setUser(null);
+           }
+         } catch (error) {
+           console.error("Error fetching user info:", error);
+         }
+       };
+   
+       fetchUserInfo();
+     }, []);
 
   useEffect(() => {
     const fetchData = async () => {

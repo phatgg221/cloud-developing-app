@@ -14,6 +14,35 @@ const NewMenuForm = () => {
     setId(id);
     return <div></div>;
   }
+  const [user, setUser]= useState(null);
+  if(!user && !user?.isAdmin){
+    router.push('/');
+  }
+  console.log(user)
+    useEffect(() => {
+       const fetchUserInfo = async () => {
+         try {
+           const response = await fetch("/api/me");
+           if (response.ok) {
+             const userInfo = await response.json();
+             setUser(userInfo.userInfo);
+   
+             const token = document.cookie
+               .split("; ")
+               .find((row) => row.startsWith("accessToken="))
+               ?.split("=")[1];
+             setAccessToken(token);
+           } else {
+            setUser(null);
+           }
+         } catch (error) {
+           console.error("Error fetching user info:", error);
+         }
+       };
+   
+       fetchUserInfo();
+     }, []);
+
   const [dishes, setDishes] = useState([{ name: "", description: "", price: "", image: "" }]);
   const [isEditMode, setIsEditMode] = useState(false);
   const [formData, setFormData] = useState({
