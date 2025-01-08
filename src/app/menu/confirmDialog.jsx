@@ -20,7 +20,7 @@ const ConfirmDialog = ({ username, foodname, price, apiEndpoint }) => {
     price,
     timestamp: new Date().toISOString(),
   });
-
+  
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
