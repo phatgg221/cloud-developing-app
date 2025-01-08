@@ -148,12 +148,12 @@ export default function TablePage() {
                 <td className="border border-gray-300 px-4 py-2 text-center">
                   <button
                     onClick={() => toggleAvailability(table.id)}
-                    disabled={!data} // Disable button if the user is not logged in
+                    disabled={!data} 
                     className={`px-4 py-2 rounded-md shadow ${
                       table.status === "Available"
                         ? "bg-red-500 text-white hover:bg-red-600"
                         : "bg-green-500 text-white hover:bg-green-600"
-                    } ${!data ? "opacity-50 cursor-not-allowed" : ""}`} // Add styles for disabled state
+                    } ${!data ? "opacity-50 cursor-not-allowed" : ""}`} 
                   >
                     {table.status === "Available" ? "Mark Occupied" : "Mark Available"}
                   </button>
