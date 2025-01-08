@@ -9,12 +9,11 @@ export default async function handler(req, res) {
 
     const { username, password } = req.body;
 
-    const clientId = process.env.COGNITO_CLIENT_ID; 
+    const clientId = process.env.COGNITO_CLIENT_ID;
     const clientSecret = process.env.COGNITO_CLIENT_SECRET;
-    const userPoolId = process.env.COGNITO_USER_POOL_ID; 
     const region = process.env.AWS_REGION || "us-east-1";
 
-    if (!clientId || !clientSecret || !userPoolId) {
+    if (!clientId || !clientSecret) {
         return res.status(500).json({ error: "Server misconfiguration" });
     }
 
@@ -45,27 +44,32 @@ export default async function handler(req, res) {
         const response = await cognito.initiateAuth(params).promise();
         const { AccessToken, IdToken, RefreshToken } = response.AuthenticationResult;
 
-        // Step 2: Fetch user information
-        const user = await cognito.getUser({ AccessToken }).promise();
-        const userInfo = {
-            username: user.Username,
-            email: user.UserAttributes.find(attr => attr.Name === "email")?.Value || "Unknown",
-            name: user.UserAttributes.find(attr => attr.Name === "name")?.Value || "Unknown",
-        };
+        // Step 2: Decode the IdToken
+        const decodedToken = JSON.parse(atob(IdToken.split(".")[1]));
 
-        // Step 3: Check user groups
-        let isAdmin = false;
-        try {
-            const groupResponse = await cognito.adminListGroupsForUser({
-                UserPoolId: userPoolId,
-                Username: username,
-            }).promise();
+        // Debug: Log the decoded token to check the value of "cognito:groups"
+        console.log("Decoded Token:", decodedToken);
 
-            const userGroups = groupResponse.Groups.map(group => group.GroupName);
-            isAdmin = userGroups.includes("admin");
-        } catch (groupError) {
-            console.warn("Group check failed or user is not in any groups:", groupError.message);
+        // Step 3: Safely handle the "cognito:groups" claim
+        let userGroups = [];
+        if (decodedToken["cognito:groups"]) {
+            // If "cognito:groups" is a string, split it
+            if (typeof decodedToken["cognito:groups"] === "string") {
+                userGroups = decodedToken["cognito:groups"].split(",");
+            }
+            // If "cognito:groups" is already an array, use it directly
+            else if (Array.isArray(decodedToken["cognito:groups"])) {
+                userGroups = decodedToken["cognito:groups"];
+            }
         }
+
+        const isAdmin = userGroups.includes("admin");
+
+        const userInfo = {
+            username: decodedToken["cognito:username"],
+            email: decodedToken.email || "Unknown",
+            name: decodedToken.name || "Unknown",
+        };
 
         // Step 4: Set secure cookies
         res.setHeader("Set-Cookie", [
