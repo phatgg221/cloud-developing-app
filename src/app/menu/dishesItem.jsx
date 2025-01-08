@@ -36,7 +36,7 @@ const DishItem = ({ name, description, price, image }) => {
         <h2 className="font-bold text-xl md:text-2xl">{name}</h2>
         <p className="pt-2 text-sm md:text-base">{description}</p>
       </div>
-      <div className="text-yellow-500 pt-2 text-lg md:text-xl">{price}</div>
+      <div className="text-yellow-500 pt-2 text-lg md:text-xl">${price}</div>
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}> {/* Handle dialog open/close */}
         <DialogTrigger asChild>
           <button className="absolute top-0 right-0 bg-yellow-500 text-white py-1 px-4 rounded-md opacity-0 group-hover:opacity-100 transform group-hover:translate-y-2 transition duration-300 ease-in-out">
@@ -70,10 +70,10 @@ const DishItem = ({ name, description, price, image }) => {
               <ConfirmDialog  username={data?.username} foodname={name} price={price} />
             </Dialog>
 
-            {/* Cancel Button to Close the Dialog */}
+           
             <button
               className="bg-gray-500 text-white px-4 py-2 rounded-md"
-              onClick={() => setDialogOpen(false)} // Close the dialog
+              onClick={() => setDialogOpen(false)} 
             >
               Cancel
             </button>

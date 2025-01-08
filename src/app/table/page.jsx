@@ -1,24 +1,61 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 
 export default function TablePage() {
-  const apiBaseUrl = 'https://ic1ln5cze5.execute-api.us-east-1.amazonaws.com/cafeappstage'; 
+  const apiBaseUrl = "https://ic1ln5cze5.execute-api.us-east-1.amazonaws.com/cafeappstage";
 
   const [tables, setTables] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
   const [data, setData] = useState(null);
+  const [accessToken, setAccessToken] = useState("");
+
+  useEffect(() => {
+    const fetchUserInfo = async () => {
+      try {
+        const response = await fetch("/api/me");
+        if (response.ok) {
+          const userInfo = await response.json();
+          setData(userInfo.userInfo);
+
+          // Fetch the accessToken from cookies (you may need to parse the cookies)
+          const token = document.cookie
+            .split("; ")
+            .find((row) => row.startsWith("accessToken="))
+            ?.split("=")[1];
+          setAccessToken(token);
+        } else {
+          setData(null);
+        }
+      } catch (error) {
+        console.error("Error fetching user info:", error);
+      }
+    };
+
+    fetchUserInfo();
+  }, []);
 
   useEffect(() => {
     const fetchTables = async () => {
       try {
         setLoading(true);
-        const response = await fetch(`${apiBaseUrl}/getTable`);
-        if (!response.ok) throw new Error('Failed to fetch tables');
+        if (!accessToken) {
+          throw new Error("No access token available");
+        }
+
+        const response = await fetch(`${apiBaseUrl}/getTable`, {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${accessToken}`, 
+          },
+        });
+        
+        if (!response.ok) throw new Error("Failed to fetch tables");
+
         const data = await response.json();
-        const body = JSON.parse(data.body); 
-        setTables(body.data); 
+        const body = JSON.parse(data.body);
+        setTables(body.data);
       } catch (err) {
         setError(err.message);
       } finally {
@@ -26,30 +63,14 @@ export default function TablePage() {
       }
     };
 
-    fetchTables();
-  }, []);
-
-  const fetchUserInfo = async () => {
-    try {
-      const response = await fetch("/api/me");
-      if (response.ok) {
-        const userInfo = await response.json();
-        setData(userInfo.userInfo); 
-      } else {
-        setData(null);
-      }
-    } catch (error) {
-      console.error("Error fetching user info:", error);
+    if (accessToken) {
+      fetchTables();
     }
-  };
-
-  useEffect(() => {
-    fetchUserInfo();
-  }, []);
+  }, [accessToken]);
 
   const toggleAvailability = async (id) => {
     const table = tables.find((t) => t.id === id);
-    const updatedStatus = table.status === 'Available' ? 'Occupied' : 'Available';
+    const updatedStatus = table.status === "Available" ? "Occupied" : "Available";
 
     try {
       const requestBody = {
@@ -59,13 +80,20 @@ export default function TablePage() {
         size: table.size,
       };
 
+      if (!accessToken) {
+        throw new Error("No access token available");
+      }
+
       const response = await fetch(`${apiBaseUrl}/createTable`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`, // Add the token here
+        },
         body: JSON.stringify(requestBody),
       });
 
-      if (!response.ok) throw new Error('Failed to update table status');
+      if (!response.ok) throw new Error("Failed to update table status");
 
       setTables((prev) =>
         prev.map((t) => (t.id === id ? { ...t, status: updatedStatus } : t))
@@ -82,9 +110,7 @@ export default function TablePage() {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-r from-green-50 via-white to-green-50">
       <div className="w-full max-w-4xl bg-white rounded-lg shadow-lg p-6">
-        <h1 className="text-3xl font-bold text-gray-700 mb-6 text-center">
-          Available Tables
-        </h1>
+        <h1 className="text-3xl font-bold text-gray-700 mb-6 text-center">Available Tables</h1>
         {!data && <div>Please login to book table</div>}
         <table className="table-auto w-full border-collapse border border-gray-300">
           <thead>
@@ -102,7 +128,7 @@ export default function TablePage() {
                 <td className="border border-gray-300 px-4 py-2">{table.number}</td>
                 <td
                   className={`border border-gray-300 px-4 py-2 ${
-                    table.status === 'Available' ? 'text-green-600' : 'text-red-600'
+                    table.status === "Available" ? "text-green-600" : "text-red-600"
                   }`}
                 >
                   {table.status}
@@ -111,12 +137,12 @@ export default function TablePage() {
                 <td className="border border-gray-300 px-4 py-2">
                   <div
                     className={`px-4 py-2 rounded-md shadow ${
-                      table.status === 'Available'
-                        ? 'bg-green-500 text-white'
-                        : 'bg-red-500 text-white'
+                      table.status === "Available"
+                        ? "bg-green-500 text-white"
+                        : "bg-red-500 text-white"
                     }`}
                   >
-                    {table.status === 'Available' ? 'Available' : 'Unavailable'}
+                    {table.status === "Available" ? "Available" : "Unavailable"}
                   </div>
                 </td>
                 <td className="border border-gray-300 px-4 py-2 text-center">
@@ -124,12 +150,12 @@ export default function TablePage() {
                     onClick={() => toggleAvailability(table.id)}
                     disabled={!data} // Disable button if the user is not logged in
                     className={`px-4 py-2 rounded-md shadow ${
-                      table.status === 'Available'
-                        ? 'bg-red-500 text-white hover:bg-red-600'
-                        : 'bg-green-500 text-white hover:bg-green-600'
-                    } ${!data ? 'opacity-50 cursor-not-allowed' : ''}`} // Add styles for disabled state
+                      table.status === "Available"
+                        ? "bg-red-500 text-white hover:bg-red-600"
+                        : "bg-green-500 text-white hover:bg-green-600"
+                    } ${!data ? "opacity-50 cursor-not-allowed" : ""}`} // Add styles for disabled state
                   >
-                    {table.status === 'Available' ? 'Mark Occupied' : 'Mark Available'}
+                    {table.status === "Available" ? "Mark Occupied" : "Mark Available"}
                   </button>
                 </td>
               </tr>

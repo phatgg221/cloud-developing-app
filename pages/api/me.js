@@ -1,5 +1,5 @@
 import { parse } from "cookie";
-import { CloudCog } from "lucide-react";
+
 
 export default function handler(req, res) {
     const cookies = parse(req.headers.cookie || "");
