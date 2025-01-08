@@ -1,13 +1,26 @@
 import React from "react";
+import { useRouter } from "next/navigation";
 // import { useAuth } from "../../contexts/AuthContext";
 
 function AdminHeader() {
   // const { adminLogout, logout } = useAuth();
-
-  const handleButton = async () => {
-    // adminLogout();
-    // logout();
-    window.location.href = "/";
+  const router= useRouter();
+  const onLogout = async () => {
+    try {
+        const response = await fetch("/api/logout", {
+            method: "POST",
+        });
+  
+        if (response.ok) {
+            alert("Logout successful!");
+            router.push("/");
+        } else {
+            throw new Error("Failed to log out");
+        }
+    } catch (err) {
+        console.error("Logout error:", err);
+        alert(err.message || "An error occurred during logout.");
+    }
   };
 
   return (
@@ -17,7 +30,7 @@ function AdminHeader() {
           Admin Dashboard
         </h3>
         <button
-          onClick={handleButton}
+          onClick={onLogout}
           className="px-4 py-2 ml-2 rounded border-2 border-[#f8a61b] bg-none text-[#f8a61b] text-lg md:text-xl flex items-center transition-colors duration-150 hover:bg-[#f8a61b] hover:text-white"
         >
           <p className="mb-0">Logout</p>

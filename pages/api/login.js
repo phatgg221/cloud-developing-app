@@ -69,6 +69,7 @@ export default async function handler(req, res) {
             username: decodedToken["cognito:username"],
             email: decodedToken.email || "Unknown",
             name: decodedToken.name || "Unknown",
+            isAdmin: isAdmin|| false,
         };
 
         // Step 4: Set secure cookies
