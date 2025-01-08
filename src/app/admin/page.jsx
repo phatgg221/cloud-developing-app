@@ -1,13 +1,40 @@
 'use client';
 
-import React from 'react';
+import React,{useEffect, useState} from 'react';
 import AdminHeader from '@/components/application_component/adminHeader';
 import { Button } from '@/components/ui/button';
-// import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
 
-export default function Page() {
-  // const router = useRouter();
-  
+export default  function Page() {
+  const router = useRouter();
+  const [data, setData]= useState(null);
+
+  if(data && !data.isAdmin){
+    router.push('/');
+  }
+  useEffect(() => {
+    const fetchUserInfo = async () => {
+      try {
+        const response = await fetch("/api/me");
+        if (response.ok) {
+          const userInfo = await response.json();
+          setData(userInfo.userInfo);
+
+          // const token = document.cookie
+          //   .split("; ")
+          //   .find((row) => row.startsWith("accessToken="))
+          //   ?.split("=")[1];
+          // setAccessToken(token);
+        } else {
+          setData(null);
+        }
+      } catch (error) {
+        console.error("Error fetching user info:", error);
+      }
+    };
+
+    fetchUserInfo();
+  }, []);
 
   const handleNavigation = (path) => {
     // router.push(path);

@@ -4,6 +4,7 @@ import { parse } from "cookie";
 export default function handler(req, res) {
     const cookies = parse(req.headers.cookie || "");
     const userInfo = cookies.userInfo;
+    // console.log(userInfo);
     if (!userInfo) {
         return res.status(401).json({ error: "Not authenticated" });
     }

@@ -48,7 +48,7 @@ export default async function handler(req, res) {
         const decodedToken = JSON.parse(atob(IdToken.split(".")[1]));
 
         // Debug: Log the decoded token to check the value of "cognito:groups"
-        console.log("Decoded Token:", decodedToken);
+        // console.log("Decoded Token:", decodedToken);
 
         // Step 3: Safely handle the "cognito:groups" claim
         let userGroups = [];
