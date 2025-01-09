@@ -9,6 +9,8 @@ const MainComponent = () => {
     message: ""
   });
 
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({
@@ -17,26 +19,54 @@ const MainComponent = () => {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-
-    // Form validation (basic example)
+  
+    // Form validation
     if (!formData.name || !formData.email || !formData.message) {
       alert("Please fill in all fields.");
       return;
     }
+  
+    setIsSubmitting(true); // Set loading state
+  
+    try {
+      // Log the form data before sending
+      // console.log("Form data to be sent:", formData);
 
-    // Log form data (you would normally send this to an API)
-    console.log("Form submitted with data:", formData);
-    alert("Your message has been sent!");
-
-    // Clear form after submission
-    setFormData({
-      name: "",
-      email: "",
-      message: ""
-    });
+      const requestBody= {body:JSON.stringify(formData)};
+  
+      // Make the POST request to the API endpoint
+      const response = await fetch("https://umdr1ohpzk.execute-api.us-east-1.amazonaws.com/dev", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(requestBody)
+      });
+  
+      if (!response.ok) {
+        throw new Error("Failed to submit the form. Please try again.");
+      }
+  
+      const data = await response.json();
+      console.log("API Response:", data);
+      alert("Your message has been sent!");
+  
+      // Clear form after successful submission
+      setFormData({
+        name: "",
+        email: "",
+        message: ""
+      });
+    } catch (error) {
+      console.error("Error submitting form:", error.message);
+      alert("There was an error sending your message. Please try again.");
+    } finally {
+      setIsSubmitting(false); // Reset loading state
+    }
   };
+  
 
   return (
     <div className="bg-white py-10 px-5 pt-36">
@@ -98,8 +128,9 @@ const MainComponent = () => {
                 <button
                   type="submit"
                   className="w-full bg-[#d4af37] text-white py-2 rounded-md hover:bg-[#c29a2d]"
+                  disabled={isSubmitting} // Disable button while submitting
                 >
-                  Submit
+                  {isSubmitting ? "Sending..." : "Submit"}
                 </button>
               </div>
             </form>
