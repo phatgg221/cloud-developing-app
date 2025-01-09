@@ -54,7 +54,6 @@ export default function Page() {
     }, []);
 
     const handleDelete = async(id) =>{
-        console.log(id, "here is the id ")
         const requestBody= {
             httpMethod: "DELETE",
             body: JSON.stringify({
