@@ -9,6 +9,7 @@ const MainComponent = () => {
     message: ""
   });
 
+  const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleChange = (e) => {
@@ -17,25 +18,57 @@ const MainComponent = () => {
       ...formData,
       [name]: value
     });
+
+    // Clear error when user types
+    if (errors[name]) {
+      setErrors({
+        ...errors,
+        [name]: null
+      });
+    }
+  };
+
+  const validateInputs = () => {
+    const newErrors = {};
+
+    // Name validation
+    if (!formData.name.trim()) {
+      newErrors.name = "Name is required.";
+    } else if (formData.name.length < 3) {
+      newErrors.name = "Name must be at least 3 characters long.";
+    }
+
+    // Email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!formData.email.trim()) {
+      newErrors.email = "Email is required.";
+    } else if (!emailRegex.test(formData.email)) {
+      newErrors.email = "Invalid email address.";
+    }
+
+    // Message validation
+    if (!formData.message.trim()) {
+      newErrors.message = "Message is required.";
+    } else if (formData.message.length < 10) {
+      newErrors.message = "Message must be at least 10 characters long.";
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0; // Return true if no errors
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
-    // Form validation
-    if (!formData.name || !formData.email || !formData.message) {
-      alert("Please fill in all fields.");
-      return;
-    }
-  
-    setIsSubmitting(true); // Set loading state
-  
-    try {
-      // Log the form data before sending
-      // console.log("Form data to be sent:", formData);
 
-      const requestBody= {body:JSON.stringify(formData)};
-  
+    if (!validateInputs()) {
+      return; // Stop submission if validation fails
+    }
+
+    setIsSubmitting(true); // Set loading state
+
+    try {
+      const requestBody = { body: JSON.stringify(formData) };
+
       // Make the POST request to the API endpoint
       const response = await fetch("https://umdr1ohpzk.execute-api.us-east-1.amazonaws.com/dev", {
         method: "POST",
@@ -44,15 +77,15 @@ const MainComponent = () => {
         },
         body: JSON.stringify(requestBody)
       });
-  
+
       if (!response.ok) {
         throw new Error("Failed to submit the form. Please try again.");
       }
-  
+
       const data = await response.json();
       console.log("API Response:", data);
       alert("Your message has been sent!");
-  
+
       // Clear form after successful submission
       setFormData({
         name: "",
@@ -66,7 +99,6 @@ const MainComponent = () => {
       setIsSubmitting(false); // Reset loading state
     }
   };
-  
 
   return (
     <div className="bg-white py-10 px-5 pt-36">
@@ -93,9 +125,10 @@ const MainComponent = () => {
                   name="name"
                   value={formData.name}
                   onChange={handleChange}
-                  className="w-full p-2 border border-gray-300 rounded-md"
+                  className={`w-full p-2 border ${errors.name ? "border-red-500" : "border-gray-300"} rounded-md`}
                   placeholder="Enter your name"
                 />
+                {errors.name && <p className="text-red-500 text-sm mt-1">{errors.name}</p>}
               </div>
 
               <div>
@@ -106,9 +139,10 @@ const MainComponent = () => {
                   name="email"
                   value={formData.email}
                   onChange={handleChange}
-                  className="w-full p-2 border border-gray-300 rounded-md"
+                  className={`w-full p-2 border ${errors.email ? "border-red-500" : "border-gray-300"} rounded-md`}
                   placeholder="Enter your email"
                 />
+                {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email}</p>}
               </div>
 
               <div>
@@ -118,10 +152,11 @@ const MainComponent = () => {
                   name="message"
                   value={formData.message}
                   onChange={handleChange}
-                  className="w-full p-2 border border-gray-300 rounded-md"
+                  className={`w-full p-2 border ${errors.message ? "border-red-500" : "border-gray-300"} rounded-md`}
                   placeholder="Enter your message"
                   rows="4"
                 />
+                {errors.message && <p className="text-red-500 text-sm mt-1">{errors.message}</p>}
               </div>
 
               <div>
