@@ -7,7 +7,8 @@ export default function Page() {
     const [data, setData] = useState(null);
     const router = useRouter();
     const [user, setUser]= useState(null);
-    if(!user && !user?.isAdmin){
+    // console.log(user.isAdmin);
+    if(user && !user?.isAdmin){
       router.push('/');
     }
       useEffect(() => {
@@ -72,6 +73,7 @@ export default function Page() {
 
             if(response.ok){
                 alert("Approve successfully");
+                window.location.reload();
             }else{
                 alert("There is something wrong please try again");
             }

@@ -9,8 +9,8 @@ export default async function handler(req, res) {
 
     const { username, password } = req.body;
 
-    const clientId = process.env.COGNITO_CLIENT_ID;
-    const clientSecret = process.env.COGNITO_CLIENT_SECRET;
+    const clientId = process.env.COGNITO_CLIENT_ID || '2gjpon357ujm2enjd9qcngn5lm';
+    const clientSecret = process.env.COGNITO_CLIENT_SECRET || 'gfh21gs4f62rshdeq2obnlqd0hagou9gapo9527jkfdn8r6fne9';
     const region = process.env.AWS_REGION || "us-east-1";
 
     if (!clientId || !clientSecret) {
