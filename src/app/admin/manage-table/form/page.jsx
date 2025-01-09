@@ -1,16 +1,21 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState,Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import style from "../../../../styles/Admin.Form.module.css";
 import styleBtn from "../../../../styles/table.module.css";
 
 const NewTableForm = () => {
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const id = searchParams.get("id");
-
   const [accessToken, setAccessToken] = useState("");
-  const [data, setData] = useState(null);
+  const [data, setData]= useState(null);
+  const [id,setId]=useState('');
+    function Search() {
+      const searchParams = useSearchParams();
+      const id = searchParams.get("id")
+      setId(id);
+      return <div></div>;
+    }
+  
   const [isEditMode, setIsEditMode] = useState(false);
   const [formData, setFormData] = useState({
     id: "",
@@ -18,44 +23,35 @@ const NewTableForm = () => {
     status: "Available",
     size: "",
   });
-  const [loading, setLoading] = useState(true);
-
-  // Redirect non-admin users
-  useEffect(() => {
-    const fetchUserInfo = async () => {
-      try {
-        const response = await fetch("/api/me");
-        if (response.ok) {
-          const userInfo = await response.json();
-          setData(userInfo.userInfo);
-
-          const token = document.cookie
-            .split("; ")
-            .find((row) => row.startsWith("accessToken="))
-            ?.split("=")[1];
-          setAccessToken(token);
-
-          if (!userInfo.userInfo?.isAdmin) {
-            router.push("/");
-          }
-        } else {
-          setData(null);
-          router.push("/");
-        }
-      } catch (error) {
-        console.error("Error fetching user info:", error);
-        router.push("/");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchUserInfo();
-  }, [router]);
-
-  // Fetch table data for edit mode
+   if(!data && !data?.isAdmin){
+    router.push('/');
+  }
+    useEffect(() => {
+       const fetchUserInfo = async () => {
+         try {
+           const response = await fetch("/api/me");
+           if (response.ok) {
+             const userInfo = await response.json();
+             setData(userInfo.userInfo);
+   
+             const token = document.cookie
+               .split("; ")
+               .find((row) => row.startsWith("accessToken="))
+               ?.split("=")[1];
+             setAccessToken(token);
+           } else {
+             setData(null);
+           }
+         } catch (error) {
+           console.error("Error fetching user info:", error);
+         }
+       };
+   
+       fetchUserInfo();
+     }, []);
   useEffect(() => {
     if (id) {
+      // Fetch table data if `id` is present (update mode)
       const fetchTableData = async () => {
         try {
           const response = await fetch(
@@ -85,20 +81,25 @@ const NewTableForm = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
+    const requestBody = {
+      httpMethod: isEditMode ? "PUT" : "POST",
+      body: JSON.stringify({
+        id: formData.id,
+        number: formData.number,
+        status: formData.status,
+        size: formData.size,
+      }),
+    };
+
     try {
       const response = await fetch(
         `https://ic1ln5cze5.execute-api.us-east-1.amazonaws.com/cafeappstage/createTable`,
         {
-          method: isEditMode ? "PUT" : "POST",
+          method:  isEditMode ? "PUT" : "POST",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({
-            id: formData.id,
-            number: formData.number,
-            status: formData.status,
-            size: formData.size,
-          }),
+          body: JSON.stringify(requestBody),
         }
       );
 
@@ -112,10 +113,11 @@ const NewTableForm = () => {
     }
   };
 
-  if (loading) return <div>Loading...</div>;
-
   return (
     <div className={`${style.formContainer}`}>
+        <Suspense fallback={<div>Loading...</div>}>
+              <Search />
+          </Suspense>
       <form className={`${style.form}`} onSubmit={handleSubmit}>
         <div className={style.inputGroup}>
           <label>Table ID</label>
@@ -126,7 +128,7 @@ const NewTableForm = () => {
             value={formData.id}
             placeholder="Enter Table ID"
             onChange={(e) => setFormData({ ...formData, id: e.target.value })}
-            disabled={isEditMode}
+            disabled={isEditMode} 
           />
         </div>
         <div className={style.inputGroup}>
