@@ -8,6 +8,10 @@ const NewMenuForm = () => {
   const router = useRouter();
   ; // Read the `id` from the query parameter
   const [id,setId]=useState('');
+  const [accessToken, setAccessToken]= useState();
+  useEffect(() => {
+    window.scrollTo(0, 0); // Scroll to the top of the page
+}, []);
   function Search() {
     const searchParams = useSearchParams();
     const id = searchParams.get("id")
@@ -186,7 +190,24 @@ const NewMenuForm = () => {
               />
             </div>
             <div className={`${style.inputGroup}`}>
-              <label>Image URL</label>
+              <label>Image</label>
+              {/* <label>Image URL</label> */}
+              { dish.image ?(
+                <div>
+                    <img src={dish.image} alt="dish" style={{ maxWidth: '100px', maxHeight: '100px', objectFit: 'cover' }}></img>
+
+                </div>
+              ):(
+                <div>
+                   <input
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => handleImageUpload(index, e)}
+                />
+                </div>
+              )
+
+              }
               <input
                 type="text"
                 name="image"
