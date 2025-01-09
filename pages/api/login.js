@@ -74,30 +74,30 @@ export default async function handler(req, res) {
 
         // Step 4: Set secure cookies
         res.setHeader("Set-Cookie", [
-            // serialize("accessToken", AccessToken, {
-            //     httpOnly: true,
-            //     secure: process.env.NODE_ENV === "production",
-            //     sameSite: "strict",
-            //     path: "/",
-            //     maxAge: 60 * 60, // 1 hour
-            // }),
-            // serialize("idToken", IdToken, {
-            //     httpOnly: true,
-            //     secure: process.env.NODE_ENV === "production",
-            //     sameSite: "strict",
-            //     path: "/",
-            //     maxAge: 60 * 60,
-            // }),
-            // serialize("refreshToken", RefreshToken, {
-            //     httpOnly: true,
-            //     secure: process.env.NODE_ENV === "production",
-            //     sameSite: "strict",
-            //     path: "/",
-            //     maxAge: 60 * 60 * 24 * 7, // 7 days
-            // }),
+            serialize("accessToken", AccessToken, {
+                httpOnly: true,
+                secure: "production" === "production",
+                sameSite: "strict",
+                path: "/",
+                maxAge: 60 * 60, // 1 hour
+            }),
+            serialize("idToken", IdToken, {
+                httpOnly: true,
+                secure: "production" === "production",
+                sameSite: "strict",
+                path: "/",
+                maxAge: 60 * 60,
+            }),
+            serialize("refreshToken", RefreshToken, {
+                httpOnly: true,
+                secure: "production" === "production",
+                sameSite: "strict",
+                path: "/",
+                maxAge: 60 * 60 * 24 * 7, // 7 days
+            }),
             serialize("userInfo", JSON.stringify(userInfo), {
                 httpOnly: true,
-                secure: process.env.NODE_ENV === "production",
+                secure: "production" === "production",
                 sameSite: "strict",
                 path: "/",
                 maxAge: 60 * 60 * 24, // 1 day
