@@ -63,7 +63,7 @@ const DishItem = ({ name, description, price, image }) => {
           <div className="flex justify-end mt-4">
             <Dialog>
               <DialogTrigger asChild>
-                <button className="bg-green-500 text-white px-4 py-2 rounded-md mr-2">
+                <button disabled={!data} className="bg-green-500 text-white px-4 py-2 rounded-md mr-2">
                   {data ? "Confirm Order" : "Please login to order"}
                 </button>
               </DialogTrigger>
