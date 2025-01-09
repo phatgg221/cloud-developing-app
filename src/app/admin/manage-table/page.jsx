@@ -3,111 +3,118 @@ import { useState, useEffect } from "react";
 import React from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+
 const CardTable = () => {
   const [searchTerm, setSearchItem] = useState("");
   const [tableData, setTableData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [accessToken, setAccessToken] = useState("");
-  const [data, setData]= useState(null);
- const router = useRouter();
- if(data && !data.isAdmin){
-  router.push('/');
-}
+  const [data, setData] = useState(null);
+
+  const router = useRouter();
+
   useEffect(() => {
-     const fetchUserInfo = async () => {
-       try {
-         const response = await fetch("/api/me");
-         if (response.ok) {
-           const userInfo = await response.json();
-           setData(userInfo.userInfo);
- 
-           const token = document.cookie
-             .split("; ")
-             .find((row) => row.startsWith("accessToken="))
-             ?.split("=")[1];
-           setAccessToken(token);
-         } else {
-           setData(null);
-         }
-       } catch (error) {
-         console.error("Error fetching user info:", error);
-       }
-     };
- 
-     fetchUserInfo();
-   }, []);
+    const fetchUserInfo = async () => {
+      try {
+        const response = await fetch("/api/me");
+        if (response.ok) {
+          const userInfo = await response.json();
+          setData(userInfo.userInfo);
 
-  const createButton = () => {
-    router.push("/admin/manage-table/form");
-  };
+          const token = document.cookie
+            .split("; ")
+            .find((row) => row.startsWith("accessToken="))
+            ?.split("=")[1];
+          setAccessToken(token);
 
+          if (!userInfo.userInfo?.isAdmin) {
+            router.push("/");
+          }
+        } else {
+          setData(null);
+          router.push("/");
+        }
+      } catch (error) {
+        console.error("Error fetching user info:", error);
+        router.push("/");
+      } finally {
+        setLoading(false);
+      }
+    };
 
-    const handleUpdate = (menu) => {
-        router.push(`/admin/manage-table/form?id=${menu}`);
-      };
+    fetchUserInfo();
+  }, [router]);
+
   useEffect(() => {
+    if (!accessToken) return;
+
     const fetchTableData = async () => {
       try {
+        setLoading(true);
         const response = await fetch(
           "https://ic1ln5cze5.execute-api.us-east-1.amazonaws.com/cafeappstage/getTable",
           {
             method: "GET",
-          headers: {
-            Authorization: `Bearer ${accessToken}`, 
-          },
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
           }
         );
+
         if (response.ok) {
           const data = await response.json();
           const body = JSON.parse(data.body);
           setTableData(body.data);
         } else {
-          console.error("Failed to fetch data");
+          console.error("Failed to fetch table data");
         }
       } catch (error) {
-        console.error("Error fetching data:", error);
-      }finally{
+        console.error("Error fetching table data:", error);
+      } finally {
         setLoading(false);
       }
     };
 
     fetchTableData();
-  }, []);
+  }, [accessToken]);
 
-  const handleSearchInput = (searchTerm) => {
-    setSearchItem(searchTerm);
-  };
+ 
 
   const filteredTables = tableData.filter((table) =>
     table.number.toString().includes(searchTerm.toLowerCase())
   );
 
- 
-
   const handleDelete = async (id) => {
-    const requestBody = {
-      httpMethod: "DELETE",
-      body: JSON.stringify({
-        id: id,
-      }),
-    };
     try {
-      const response = await fetch(`https://ic1ln5cze5.execute-api.us-east-1.amazonaws.com/cafeappstage/deleteTable`, {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ id }),
-        body: JSON.stringify(requestBody),
-      });
+      const response = await fetch(
+        `https://ic1ln5cze5.execute-api.us-east-1.amazonaws.com/cafeappstage/deleteTable`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ id }),
+        }
+      );
 
-      if (!response.ok) throw new Error("Failed to delete table");
-      setTableData((prevData) => prevData.filter((table) => table.id !== id));
-      console.log("Deleted table with ID:", id);
+      if (response.ok) {
+        setTableData((prevData) => prevData.filter((table) => table.id !== id));
+        console.log("Deleted table with ID:", id);
+      } else {
+        throw new Error("Failed to delete table");
+      }
     } catch (err) {
       console.error(err.message);
     }
+  };
+
+  const createButton = () => {
+    router.push("/admin/manage-table/form");
+  };
+
+  const handleUpdate = (menu) => {
+    router.push(`/admin/manage-table/form?id=${menu}`);
   };
 
   if (loading) return <div>Loading...</div>;
@@ -133,7 +140,9 @@ const CardTable = () => {
                 <td className="p-4 text-center">{table.number}</td>
                 <td
                   className={`p-4 text-center ${
-                    table.status === "Available" ? "text-green-600" : "text-red-600"
+                    table.status === "Available"
+                      ? "text-green-600"
+                      : "text-red-600"
                   }`}
                 >
                   {table.status}
@@ -142,7 +151,7 @@ const CardTable = () => {
                 <td className="p-4 text-center">
                   <Image
                     className="w-[100px] h-auto rounded-md"
-                    src={table.image || "/images/default.jpg"} // Use default image if none exists
+                    src={table.image || "/images/default.jpg"}
                     width={100}
                     height={100}
                     alt="Table image"

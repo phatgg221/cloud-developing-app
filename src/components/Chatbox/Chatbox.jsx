@@ -96,7 +96,7 @@ export default function Chatbox() {
           <div className="p-3 border-t border-gray-200">
             <input
               type="text"
-              placeholder="Type your message..."
+              placeholder="Coming soon"
               value={inputMessage}
               onChange={(e) => setInputMessage(e.target.value)}
               className="w-full p-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"
@@ -123,7 +123,7 @@ export default function Chatbox() {
             </button>
           </div>
           <div className="p-4 h-64 overflow-y-auto space-y-2">
-             Please login to chat with admin
+             Coming soon
           </div>
           
         </div>
