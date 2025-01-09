@@ -4,7 +4,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import style from "../../../../styles/Admin.Form.module.css";
 import styleBtn from "../../../../styles/table.module.css";
 import { Progress } from "@/components/ui/progress";
-
+import imageCompression from "browser-image-compression";
 
 const NewMenuForm = () => {
   const router = useRouter();
@@ -61,7 +61,19 @@ const NewMenuForm = () => {
   
     const reader = new FileReader();
     reader.onloadend = async () => {
-      const base64Data = reader.result.split(",")[1]; // Extract base64 data
+      const options = {
+        maxSizeMB: 10, // Maximum size in MB
+        maxWidthOrHeight: 1920, // Maximum width or height
+        useWebWorker: true, // Use a web worker for better performance
+      };
+      const compressedFile = await imageCompression(file, options);
+  
+      console.log("Original File Size:", file.size / 1024 / 1024, "MB");
+      console.log("Compressed File Size:", compressedFile.size / 1024 / 1024, "MB");
+  
+      // Convert to Base64
+      const base64String = await imageCompression.getDataUrlFromFile(compressedFile);
+      const base64Data=base64String.split(",")[1];
       const fileName = `${Date.now()}-${file.name}`;
       console.log(base64Data);
       try {
