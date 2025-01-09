@@ -4,13 +4,16 @@ import { useRouter, useSearchParams } from "next/navigation";
 import style from "../../../../styles/Admin.Form.module.css";
 import styleBtn from "../../../../styles/table.module.css";
 import { Progress } from "@/components/ui/progress";
+
+
 const NewMenuForm = () => {
   const router = useRouter();
   ; // Read the `id` from the query parameter
   const [id,setId]=useState('');
   function Search() {
     const searchParams = useSearchParams();
-    const id = searchParams.get("id")
+    const id = searchParams.get("id");
+    const [uploadProgress, setUploadProgress] = useState(0);
     setId(id);
     return <div></div>;
   }
@@ -50,6 +53,47 @@ const NewMenuForm = () => {
     dishes: [],
   });
 
+  const handleImageUpload = async (index, event) => {
+    const file = event.target.files[0]; // Corrected: use 'files' instead of 'file'
+    // setUploadProgress(0);
+  
+    if (!file) return;
+  
+    const reader = new FileReader();
+    reader.onloadend = async () => {
+      const base64Data = reader.result.split(",")[1]; // Extract base64 data
+      const fileName = `${Date.now()}-${file.name}`;
+      console.log(base64Data);
+      try {
+        const response = await fetch("https://icnhlwi8ea.execute-api.us-east-1.amazonaws.com/dev", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            file: base64Data,
+            fileName: fileName,
+          }),
+        });
+  
+        if (response.ok) {
+          const result = await response.json();
+          const uploadedImageUrl = JSON.parse(result.body).url;
+  
+          // Update the dishes array with the uploaded image URL
+          const newDishes = [...dishes];
+          newDishes[index].image = uploadedImageUrl;
+          setDishes(newDishes);
+          console.log(result, "re");
+          console.log(uploadedImageUrl, "image");
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+  
+    reader.readAsDataURL(file); // Read the file as a Data URL
+  };
   useEffect(() => {
     if (id) {
       // Fetch menu data if `id` is present (update mode)
