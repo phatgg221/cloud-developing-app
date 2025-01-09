@@ -15,7 +15,7 @@ const NewMenuForm = () => {
     return <div></div>;
   }
   const [user, setUser]= useState(null);
-  if(!user && !user?.isAdmin){
+  if(user && !user?.isAdmin){
     router.push('/');
   }
     useEffect(() => {

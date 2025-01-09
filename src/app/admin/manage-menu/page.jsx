@@ -16,7 +16,7 @@ const MenuTable = () => {
   const [data, setData] = useState([]);
   const router = useRouter();
   const [user, setUser]= useState(null);
-  if(!user && !user?.isAdmin){
+  if(user && !user?.isAdmin){
     router.push('/');
   }
   console.log(user)
