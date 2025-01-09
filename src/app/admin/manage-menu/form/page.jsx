@@ -3,25 +3,76 @@ import React, { useEffect, useState,Suspense  } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import style from "../../../../styles/Admin.Form.module.css";
 import styleBtn from "../../../../styles/table.module.css";
+import { Progress } from "@/components/ui/progress";
+
 
 const NewMenuForm = () => {
   const router = useRouter();
   ; // Read the `id` from the query parameter
   const [id,setId]=useState('');
   const [accessToken, setAccessToken]= useState();
+  const [loading, setLoading] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState(0); // For progress tracking
+
   useEffect(() => {
     window.scrollTo(0, 0); // Scroll to the top of the page
 }, []);
-  function Search() {
-    const searchParams = useSearchParams();
-    const id = searchParams.get("id")
-    setId(id);
-    return <div></div>;
-  }
   const [user, setUser]= useState(null);
   if(user && !user?.isAdmin){
     router.push('/');
   }
+  const handleImageUpload = async (index, event) => {
+    const file = event.target.files[0];
+    setLoading(true);
+    setUploadProgress(0); // Reset progress to 0 before starting upload
+  
+    const fileName = `${Date.now()}-${file.name}`;
+    const reader = new FileReader();
+    reader.onloadend = async () => {
+      const base64Data = reader.result.split(",")[1]; // Extract base64 data
+  
+      try {
+        const response = await fetch(
+          "https://icnhlwi8ea.execute-api.us-east-1.amazonaws.com/dev",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              file: base64Data,
+              fileName: fileName,
+            }),
+            // For tracking progress, we can use the 'onUploadProgress' event.
+            onUploadProgress: (e) => {
+              if (e.total) {
+                setUploadProgress(Math.round((e.loaded * 100) / e.total));
+              }
+            },
+          }
+        );
+  
+        if (response.ok) {
+          const result = await response.json();
+          const uploadedImageUrl = result.url;
+          const newDishes = [...dishes];
+          newDishes[index].image = uploadedImageUrl;
+          setDishes(newDishes);
+        } else {
+          console.error("Upload failed:", result.message);
+        }
+      } catch (error) {
+        console.error("Error uploading file:", error);
+      }
+  
+      setLoading(false); // Reset loading to false when done
+    };
+  
+    reader.readAsDataURL(file); // Start reading the file
+  };
+  
+  
+  
     useEffect(() => {
        const fetchUserInfo = async () => {
          try {
@@ -132,9 +183,6 @@ const NewMenuForm = () => {
   return (
     
     <div className={`${style.formContainer}`}>
-      <Suspense fallback={<div>Loading...</div>}>
-      <Search />
-    </Suspense>
       <form className={`${style.form}`} onSubmit={handleSubmit}>
         <div className={style.inputGroup}>
           <label>Menu ID</label>
@@ -204,7 +252,11 @@ const NewMenuForm = () => {
                   accept="image/*"
                   onChange={(e) => handleImageUpload(index, e)}
                 />
+                {loading && uploadProgress < 100 && (
+    <Progress value={uploadProgress} />
+  )}
                 </div>
+                
               )
 
               }
