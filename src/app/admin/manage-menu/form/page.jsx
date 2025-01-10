@@ -6,6 +6,7 @@ import styleBtn from "../../../../styles/table.module.css";
 import { Progress } from "@/components/ui/progress";
 import imageCompression from "browser-image-compression";
 
+const cloudFrontDis= 'https://d3anm71j2rkaob.cloudfront.net';
 const NewMenuForm = () => {
   const router = useRouter();
   const [uploadProgress, setUploadProgress] = useState({});
@@ -87,10 +88,15 @@ const [isUploading, setIsUploading] = useState(false);
   
         if (response.ok) {
           const result = await response.json();
-          const uploadedImageUrl = JSON.parse(result.body).url;
-  
+          let newURL='';
+          // const uploadedImageUrl = JSON.parse(result.body).url;
+          if(result.statusCode === 200){
+             newURL= cloudFrontDis+ '/'+fileName;
+          }else{
+            console.log('failed uploaded file');
+          }
           const newDishes = [...dishes];
-          newDishes[index].image = uploadedImageUrl;
+          newDishes[index].image = newURL;
           setDishes(newDishes);
   
           setUploadProgress((prev) => ({ ...prev, [index]: 100 }));
