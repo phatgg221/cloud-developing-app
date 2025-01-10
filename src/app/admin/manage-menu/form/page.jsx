@@ -148,7 +148,12 @@ const [isUploading, setIsUploading] = useState(false);
   };
 
   const handleAddDish = () => {
-    setDishes([...dishes, { name: "", description: "", price: "", image: "" }]);
+    if(dishes.length <=5){
+      setDishes([...dishes, { name: "", description: "", price: "", image: "" }]);
+    }else{
+      alert("Cannot add more only 6 meals per menu");
+    }
+    
   };
 
   const handleDeleteDish = (index) => {
