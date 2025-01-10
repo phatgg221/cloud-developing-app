@@ -23,7 +23,7 @@ const NewTableForm = () => {
     status: "Available",
     size: "",
   });
-   if(!data && !data?.isAdmin){
+   if(data && !data?.isAdmin){
     router.push('/');
   }
     useEffect(() => {
