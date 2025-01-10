@@ -96,9 +96,7 @@ export default async function handler(req, res) {
             //     maxAge: 60 * 60 * 24 * 7, // 7 days
             // }),
             serialize("userInfo", JSON.stringify(userInfo), {
-                httpOnly: true,
-                secure: true,
-                sameSite: "strict",
+                sameSite: "none",
                 path: "/",
                 maxAge: 60 * 60 * 24, // 1 day
             }),
