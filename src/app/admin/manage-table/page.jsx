@@ -126,7 +126,6 @@ const CardTable = () => {
               <th className="p-4">Table Number</th>
               <th className="p-4">Status</th>
               <th className="p-4">Size</th>
-              <th className="p-4">Image</th>
               <th className="p-4">Action</th>
             </tr>
           </thead>
@@ -144,15 +143,7 @@ const CardTable = () => {
                   {table.status}
                 </td>
                 <td className="p-4 text-center">{table.size}</td>
-                <td className="p-4 text-center">
-                  <Image
-                    className="w-[100px] h-auto rounded-md"
-                    src={table.image || "/images/default.jpg"}
-                    width={100}
-                    height={100}
-                    alt="Table image"
-                  />
-                </td>
+
                 <td className="p-4 text-center">
                   <div className="flex flex-col md:flex-row items-center justify-center gap-2">
                     <button
