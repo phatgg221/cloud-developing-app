@@ -47,7 +47,6 @@ const CardTable = () => {
   }, [router]);
 
   useEffect(() => {
-    if (!accessToken) return;
 
     const fetchTableData = async () => {
       try {
@@ -56,9 +55,6 @@ const CardTable = () => {
           "https://ic1ln5cze5.execute-api.us-east-1.amazonaws.com/cafeappstage/getTable",
           {
             method: "GET",
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-            },
           }
         );
 
