@@ -82,15 +82,11 @@ export default function TablePage() {
         size: table.size,
       };
 
-      if (!accessToken) {
-        throw new Error("No access token available");
-      }
-
-      const response = await fetch(`${apiBaseUrl}/createTable`, {
+    
+      const response = await fetch(`https://ic1ln5cze5.execute-api.us-east-1.amazonaws.com/cafeappstage/createTable`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${accessToken}`,
         },
         body: JSON.stringify(requestBody),
       });
