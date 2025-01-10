@@ -258,6 +258,7 @@ const Header = () => {
                                             onChange={(event) => setPassword(event.target.value)}
                                         />
                                     </div>
+                                    
                                     <div className="flex justify-end">
                                         <Button
                                             onClick={onSubmitLogin}
@@ -317,6 +318,10 @@ const Header = () => {
                                         placeholder="Enter your password"
                                         onChange={(event) => setPassword(event.target.value)}
                                     />
+                                    <div>Password needs to have:</div>
+                                    <div>At least one uppercase character</div>
+                                    <div>At least one special character</div>
+                                    <div>At least one number character</div>
                                 </div>
                                 <div className="flex justify-end">
                                     <Button
