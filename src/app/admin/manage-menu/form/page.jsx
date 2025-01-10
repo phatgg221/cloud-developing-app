@@ -8,6 +8,8 @@ import imageCompression from "browser-image-compression";
 
 const NewMenuForm = () => {
   const router = useRouter();
+  const [uploadProgress, setUploadProgress] = useState({});
+const [isUploading, setIsUploading] = useState(false);
   ; // Read the `id` from the query parameter
   const [id,setId]=useState('');
   function Search() {
@@ -53,28 +55,24 @@ const NewMenuForm = () => {
   });
 
   const handleImageUpload = async (index, event) => {
-    const file = event.target.files[0]; // Corrected: use 'files' instead of 'file'
-    // setUploadProgress(0);
-  
+    const file = event.target.files[0];
     if (!file) return;
+  
+    setIsUploading(true);
+    setUploadProgress((prev) => ({ ...prev, [index]: 0 }));
   
     const reader = new FileReader();
     reader.onloadend = async () => {
       const options = {
-        maxSizeMB: 10, // Maximum size in MB
-        maxWidthOrHeight: 1920, // Maximum width or height
-        useWebWorker: true, // Use a web worker for better performance
+        maxSizeMB: 10,
+        maxWidthOrHeight: 1920,
+        useWebWorker: true,
       };
       const compressedFile = await imageCompression(file, options);
-  
-      console.log("Original File Size:", file.size / 1024 / 1024, "MB");
-      console.log("Compressed File Size:", compressedFile.size / 1024 / 1024, "MB");
-  
-      // Convert to Base64
       const base64String = await imageCompression.getDataUrlFromFile(compressedFile);
-      const base64Data=base64String.split(",")[1];
+      const base64Data = base64String.split(",")[1];
       const fileName = `${Date.now()}-${file.name}`;
-      console.log(base64Data);
+  
       try {
         const response = await fetch("https://icnhlwi8ea.execute-api.us-east-1.amazonaws.com/dev", {
           method: "POST",
@@ -91,19 +89,23 @@ const NewMenuForm = () => {
           const result = await response.json();
           const uploadedImageUrl = JSON.parse(result.body).url;
   
-          // Update the dishes array with the uploaded image URL
           const newDishes = [...dishes];
           newDishes[index].image = uploadedImageUrl;
           setDishes(newDishes);
-          console.log(result, "re");
-          console.log(uploadedImageUrl, "image");
+  
+          setUploadProgress((prev) => ({ ...prev, [index]: 100 }));
+        } else {
+          throw new Error("Upload failed");
         }
       } catch (error) {
-        console.log(error);
+        console.error("Error uploading file:", error);
+        setUploadProgress((prev) => ({ ...prev, [index]: 0 }));
+      } finally {
+        setIsUploading(false);
       }
     };
   
-    reader.readAsDataURL(file); // Read the file as a Data URL
+    reader.readAsDataURL(file);
   };
   useEffect(() => {
     if (id) {
@@ -249,11 +251,21 @@ const NewMenuForm = () => {
                   style={{ maxWidth: "100px", maxHeight: "100px", objectFit: "cover" }}
                 />
               ) : (
-                <input
+                <div>
+                  <input
                   type="file"
                   accept="image/*"
                   onChange={(e) => handleImageUpload(index, e)}
                 />
+{isUploading && uploadProgress[index] >= 0 && (
+          <div className={style.progressContainer}>
+            <Progress value={uploadProgress[index]} />
+            <p>{uploadProgress[index]}% uploaded</p>
+          </div>
+        )}
+                </div>
+                
+                
               )}
             </div>
             <div className={`${style.inputGroup} ${style.centered}`}>
