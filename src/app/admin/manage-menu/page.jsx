@@ -70,14 +70,19 @@ const MenuTable = () => {
 
   const handleDelete = async (menu) => {
     try {
+      const id= menu.id;
+      const payload = {
+        httpMethod: "DELETE", // Include httpMethod if required by the backend
+        body: JSON.stringify({ id }) // Nest id in the body as a string
+    };
       const response = await fetch(
-        `https://ic1ln5cze5.execute-api.us-east-1.amazonaws.com/MenuStage/deleteMenu`,
+        `https://ic1ln5cze5.execute-api.us-east-1.amazonaws.com/cafeappstage/deleteMenu`,
         {
           method: "DELETE",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ id: menu.id }),
+          body: JSON.stringify(payload),
         }
       );
 
