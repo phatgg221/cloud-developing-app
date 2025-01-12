@@ -83,6 +83,11 @@ const CardTable = () => {
 
   const handleDelete = async (id) => {
     try {
+
+      const payload = {
+        httpMethod: "DELETE", // Include httpMethod if required by the backend
+        body: JSON.stringify({ id }) // Nest id in the body as a string
+    };
       const response = await fetch(
         `https://ic1ln5cze5.execute-api.us-east-1.amazonaws.com/cafeappstage/deleteTable`,
         {
@@ -90,7 +95,7 @@ const CardTable = () => {
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ id }),
+          body: JSON.stringify(payload),
         }
       );
 

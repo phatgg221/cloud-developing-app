@@ -15,7 +15,7 @@ const NewTableForm = () => {
       setId(id);
       return <div></div>;
     }
-  
+
   const [isEditMode, setIsEditMode] = useState(false);
   const [formData, setFormData] = useState({
     id: "",
@@ -34,11 +34,6 @@ const NewTableForm = () => {
              const userInfo = await response.json();
              setData(userInfo.userInfo);
    
-             const token = document.cookie
-               .split("; ")
-               .find((row) => row.startsWith("accessToken="))
-               ?.split("=")[1];
-             setAccessToken(token);
            } else {
              setData(null);
            }
