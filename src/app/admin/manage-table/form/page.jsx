@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState,Suspense } from "react";
+import React, { useEffect, useState, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import style from "../../../../styles/Admin.Form.module.css";
 import styleBtn from "../../../../styles/table.module.css";
@@ -7,14 +7,15 @@ import styleBtn from "../../../../styles/table.module.css";
 const NewTableForm = () => {
   const router = useRouter();
   const [accessToken, setAccessToken] = useState("");
-  const [data, setData]= useState(null);
-  const [id,setId]=useState('');
-    function Search() {
-      const searchParams = useSearchParams();
-      const id = searchParams.get("id")
-      setId(id);
-      return <div></div>;
-    }
+  const [data, setData] = useState(null);
+  const [id, setId] = useState("");
+
+  function Search() {
+    const searchParams = useSearchParams();
+    const id = searchParams.get("id");
+    setId(id);
+    return <div></div>;
+  }
 
   const [isEditMode, setIsEditMode] = useState(false);
   const [formData, setFormData] = useState({
@@ -22,28 +23,31 @@ const NewTableForm = () => {
     number: "",
     status: "Available",
     size: "",
+    username: "",
   });
-   if(data && !data?.isAdmin){
-    router.push('/');
+
+  if (data && !data?.isAdmin) {
+    router.push("/");
   }
-    useEffect(() => {
-       const fetchUserInfo = async () => {
-         try {
-           const response = await fetch("/api/me");
-           if (response.ok) {
-             const userInfo = await response.json();
-             setData(userInfo.userInfo);
-   
-           } else {
-             setData(null);
-           }
-         } catch (error) {
-           console.error("Error fetching user info:", error);
-         }
-       };
-   
-       fetchUserInfo();
-     }, []);
+
+  useEffect(() => {
+    const fetchUserInfo = async () => {
+      try {
+        const response = await fetch("/api/me");
+        if (response.ok) {
+          const userInfo = await response.json();
+          setData(userInfo.userInfo);
+        } else {
+          setData(null);
+        }
+      } catch (error) {
+        console.error("Error fetching user info:", error);
+      }
+    };
+
+    fetchUserInfo();
+  }, []);
+
   useEffect(() => {
     if (id) {
       // Fetch table data if `id` is present (update mode)
@@ -83,6 +87,7 @@ const NewTableForm = () => {
         number: formData.number,
         status: formData.status,
         size: formData.size,
+        username: formData.username, // Add username to the request body
       }),
     };
 
@@ -90,7 +95,7 @@ const NewTableForm = () => {
       const response = await fetch(
         `https://ic1ln5cze5.execute-api.us-east-1.amazonaws.com/cafeappstage/createTable`,
         {
-          method:  isEditMode ? "PUT" : "POST",
+          method: isEditMode ? "PUT" : "POST",
           headers: {
             "Content-Type": "application/json",
           },
@@ -110,9 +115,9 @@ const NewTableForm = () => {
 
   return (
     <div className={`${style.formContainer}`}>
-        <Suspense fallback={<div>Loading...</div>}>
-              <Search />
-          </Suspense>
+      <Suspense fallback={<div>Loading...</div>}>
+        <Search />
+      </Suspense>
       <form className={`${style.form}`} onSubmit={handleSubmit}>
         <div className={style.inputGroup}>
           <label>Table ID</label>
@@ -123,7 +128,7 @@ const NewTableForm = () => {
             value={formData.id}
             placeholder="Enter Table ID"
             onChange={(e) => setFormData({ ...formData, id: e.target.value })}
-            disabled={isEditMode} 
+            disabled={isEditMode}
           />
         </div>
         <div className={style.inputGroup}>
@@ -163,7 +168,19 @@ const NewTableForm = () => {
             onChange={(e) => setFormData({ ...formData, size: e.target.value })}
           />
         </div>
-
+        <div className={style.inputGroup}>
+          <label>Username</label>
+          <input
+            required
+            type="text"
+            name="username"
+            value={formData.username}
+            placeholder="Enter Username"
+            onChange={(e) =>
+              setFormData({ ...formData, username: e.target.value })
+            }
+          />
+        </div>
         <div className={styleBtn.btnBottomDiv}>
           <button className={`${styleBtn.btn}`} type="submit">
             {isEditMode ? "Update Table" : "Create Table"}
