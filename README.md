@@ -1,36 +1,37 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+How to Access the Website:
+Visit our website at https://cafenia.store to access all features, including user profiles, table management, bookings, and the chatbox system.
 
-## Getting Started
+-For Users:
+User Profile:
 
-First, run the development server:
+Access and update your profile details, including name, email, and password.
+Navigate to the "User Profile" page to view or modify your information.
+Table Management:
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+View available tables and their details.
+Book a table by providing the required information such as date, time, and number of people.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+-Booking:
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+View and create new bookings.
+Manage existing bookings, including updating or deleting them.
+Chatbox:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Use the chatbox to communicate with support or administrators.
+Messages are stored and synced dynamically using a WebSocket-based backend.
 
-## Learn More
+For Admins:
+Username: phathalo123 Password: Phathalo123!
 
-To learn more about Next.js, take a look at the following resources:
+-Manage Users:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+View user profiles and modify or delete user information as required.
+Manage Tables:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Create, update, or delete table details to keep the system up-to-date.
+Handle Bookings:
 
-## Deploy on Vercel
+View all bookings in the system, update booking statuses, or delete bookings.
+Chatbox Monitoring:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Monitor user interactions and respond to queries in real-time.
