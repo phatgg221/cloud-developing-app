@@ -6,8 +6,9 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog";
+} from "../../components/ui/dialog";
 import ConfirmDialog from "./confirmDialog";
+
 
 const DishItem = ({ name, description, price, image }) => {
   const [data, setData] = useState(null);

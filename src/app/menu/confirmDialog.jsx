@@ -8,7 +8,8 @@ import {
   DialogTitle,
 } from "../../components/ui/dialog";
 import { v4 as uuidv4 } from "uuid"; // Import UUID
-import { Input } from "../../components/input";
+import { Input } from "../../components/ui/input";
+
 
 const ConfirmDialog = ({ username, foodname, price, apiEndpoint }) => {
   const [formData, setFormData] = useState({
