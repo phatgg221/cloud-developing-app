@@ -1,23 +1,23 @@
-# Use the official Node.js image as a base
+# Use the official Node.js image as the base image
 FROM node:18-alpine
 
-# Set the working directory in the container
+# Set the working directory to /app inside the container
 WORKDIR /app
 
-# Copy package.json and package-lock.json (or yarn.lock) into the container
+# Copy package.json and package-lock.json (if available) into the container
 COPY package*.json ./
 
 # Install dependencies
 RUN npm install
 
-# Copy the rest of the application code into the container
-COPY . .
+# Copy the src directory into the container
+COPY src ./src
 
-# Build the application
-RUN npm run build
+# Build the Next.js app with a higher memory limit
+RUN node --max-old-space-size=4096 ./node_modules/.bin/next build
 
 # Expose the port Next.js runs on
 EXPOSE 3000
 
-# Start the application
+# Start the application in production mode
 CMD ["npm", "start"]

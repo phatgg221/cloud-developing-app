@@ -3,10 +3,9 @@
 import localFont from "next/font/local";
 import "./globals.css";
 import { Inria_Serif } from "next/font/google";
-import Footer from "@/components/application_component/Footer";
-import Chatbox from "@/components/Chatbox/Chatbox"; // Import the Chatbox component
+import Chatbox from "../components/Chatbox/Chatbox"
 import { usePathname } from "next/navigation";
-import ConditionalHeader from "@/components/conditionalHeader";
+import ConditionalHeader from "../components/conditionalHeader";
 const inter = Inria_Serif({ weight:'300' ,subsets: ["latin"] });
 
 const geistSans = localFont({

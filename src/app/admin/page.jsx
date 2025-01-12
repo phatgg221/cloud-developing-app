@@ -1,8 +1,8 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import AdminHeader from '@/components/application_component/adminHeader';
-import { Button } from '@/components/ui/button';
+import AdminHeader from '../../components/application_component/adminHeader';
+import Button from "../../components/ui/button";
 import { useRouter } from 'next/navigation';
 
 export default function Page() {

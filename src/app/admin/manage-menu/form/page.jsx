@@ -3,7 +3,7 @@ import React, { useEffect, useState,Suspense  } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import style from "../../../../styles/Admin.Form.module.css";
 import styleBtn from "../../../../styles/table.module.css";
-import { Progress } from "@/components/ui/progress";
+import { Progress } from "../../../../components/ui/progress";
 import imageCompression from "browser-image-compression";
 
 const cloudFrontDis= 'https://d3anm71j2rkaob.cloudfront.net';
