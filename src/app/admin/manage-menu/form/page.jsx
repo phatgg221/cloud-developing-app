@@ -19,6 +19,7 @@ const [isUploading, setIsUploading] = useState(false);
     setId(id);
     return <div></div>;
   }
+
   const [user, setUser]= useState(null);
   if(user && !user?.isAdmin){
     router.push('/');

@@ -56,29 +56,36 @@ export default function Page() {
     }, []);
 
     const handleDelete = async (id) => {
+        const payload = {
+            httpMethod: "DELETE", // Include httpMethod if required by the backend
+            body: JSON.stringify({ id }) // Nest id in the body as a string
+        };
+    
         try {
             const response = await fetch(
-                `https://uic26yj4g3.execute-api.us-east-1.amazonaws.com/dev/deleteBooking`,
+                `https://ic1ln5cze5.execute-api.us-east-1.amazonaws.com/cafeappstage/deleteBooking`,
                 {
-                    method: "DELETE",
+                    method: "DELETE", // Use POST if your backend treats everything as POST
                     headers: {
                         "Content-Type": "application/json"
                     },
-                    body: JSON.stringify({ id }), // Send only the ID
+                    body: JSON.stringify(payload) // Match Postman payload structure
                 }
             );
-
+    
             if (response.ok) {
-                setData((prevData) => prevData.filter((order) => order.id !== id)); // Remove the deleted item from UI
+                setData((prevData) => prevData.filter((order) => order.id !== id));
                 alert("Order approved successfully.");
             } else {
+                console.error("Error response:", await response.text());
                 alert("There was an issue approving the order. Please try again.");
             }
         } catch (err) {
-            console.error(err);
+            console.error("Error:", err);
             alert("An error occurred while approving the order.");
         }
     };
+    
 
     const handleReturn = () => {
         router.push('/admin');
