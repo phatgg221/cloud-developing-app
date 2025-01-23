@@ -2,7 +2,8 @@ Getting Started
 
 # Here is our AWS Cloud Architecture in our services.
 
-![Uploading Screenshot 2025-01-23 at 16.24.04.png…]()
+<img width="992" alt="Screenshot 2025-01-23 at 16 24 52" src="https://scontent.fsgn2-10.fna.fbcdn.net/v/t1.15752-9/473021708_1583699115683723_661597367606564977_n.png?_nc_cat=109&ccb=1-7&_nc_sid=9f807c&_nc_ohc=sE9ppk84fiMQ7kNvgFAs7Tl&_nc_oc=Adi5hy1Gnm-WDw4OvrH3HdQ1PCwE6dDXBkttMHekmGg4LV-5A4-0U6cCNp3M3cdlBtg&_nc_zt=23&_nc_ht=scontent.fsgn2-10.fna&oh=03_Q7cD1gFBLiXfxVmZL08OIdQdkNXivVR6VwZuAGwTzgYstBdkgQ&oe=67B96E8B" />
+
 
 
 
