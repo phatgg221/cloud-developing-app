@@ -1,5 +1,11 @@
 Getting Started
 
+# Here is our AWS Cloud Architecture in our services.
+
+![Uploading Screenshot 2025-01-23 at 16.24.04.png…]()
+
+
+
 First, run the development server:
 
 npm run dev
